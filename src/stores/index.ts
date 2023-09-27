@@ -1,5 +1,5 @@
-import { createPinia } from 'pinia'
-import useAppStore from './modules/app'
+import { createPinia } from "pinia";
+import useAppStore from "./modules/app";
 
-export { useAppStore }
-export default createPinia()
+export { useAppStore };
+export default createPinia();

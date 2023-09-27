@@ -1,14 +1,14 @@
-import request from '@/utils/request'
-import type { IUserInfo } from '@/types/user'
+import request from "@/utils/request";
+import type { IUserInfo } from "@/types/user";
 
 /**
  * 用户信息
  */
 export function queryUserInfoRequest() {
   return request<IUserInfo>({
-    url: '/teacher-lib/home/query/userInfo',
-    method: 'GET'
-  })
+    url: "/teacher-lib/home/query/userInfo",
+    method: "GET",
+  });
 }
 
 /**
@@ -16,9 +16,9 @@ export function queryUserInfoRequest() {
  */
 export function verifyAuthCountRequest() {
   return request<string | null>({
-    url: '/teacher-lib/utils/auth/count',
-    method: 'POST'
-  })
+    url: "/teacher-lib/utils/auth/count",
+    method: "POST",
+  });
 }
 
 /**
@@ -27,8 +27,8 @@ export function verifyAuthCountRequest() {
 export function getCUserToken(phone: string, code: string) {
   return request<{ accessToken: string }>({
     url: `/app/sms/v2/checkCode/app/${phone}/${code}`,
-    method: 'POST'
-  })
+    method: "POST",
+  });
 }
 
 /**
@@ -37,65 +37,65 @@ export function getCUserToken(phone: string, code: string) {
 export function getParentOrTeachToken(phone: string, code: string) {
   return request<{ parentAccessToken: string; teacherAccessToken: string }>({
     url: `/parent/sms/login/V3/${phone}/${code}`,
-    method: 'GET'
-  })
+    method: "GET",
+  });
 }
 
 /**
  * c端签名
  */
 export function getCWXSignature() {
-  const url = window.location.href.split('#')[0]
+  const url = window.location.href.split("#")[0];
   return request<{
-    debug: boolean
-    signature: string
-    appId: string
-    url: string
-    nonceStr: string
-    timestamp: string
+    debug: boolean;
+    signature: string;
+    appId: string;
+    url: string;
+    nonceStr: string;
+    timestamp: string;
   }>({
     url: `/app/wx/sign`,
-    method: 'GET',
-    params: { url }
-  })
+    method: "GET",
+    params: { url },
+  });
 }
 
 /**
  * 获取家长端微信签名
  */
 export function getParentWXSignature() {
-  const url = window.location.href.split('#')[0]
+  const url = window.location.href.split("#")[0];
   return request<{
-    debug: boolean
-    signature: string
-    appId: string
-    url: string
-    nonceStr: string
-    timestamp: string
+    debug: boolean;
+    signature: string;
+    appId: string;
+    url: string;
+    nonceStr: string;
+    timestamp: string;
   }>({
     url: `/app/wx/sign/parent`,
-    method: 'GET',
-    params: { url }
-  })
+    method: "GET",
+    params: { url },
+  });
 }
 
 /**
  * 教师端签名
  */
 export function getTeachWXSignature() {
-  const url = window.location.href.split('#')[0]
+  const url = window.location.href.split("#")[0];
   return request<{
-    debug: boolean
-    signature: string
-    appId: string
-    url: string
-    nonceStr: string
-    timestamp: string
+    debug: boolean;
+    signature: string;
+    appId: string;
+    url: string;
+    nonceStr: string;
+    timestamp: string;
   }>({
     url: `/app/wx/sign/teach`,
-    method: 'GET',
-    params: { url }
-  })
+    method: "GET",
+    params: { url },
+  });
 }
 
 /**
@@ -104,8 +104,8 @@ export function getTeachWXSignature() {
 export function verifyBindPhoneRequest() {
   return request({
     url: `/app/h5/login/bindWx`,
-    method: 'GET'
-  })
+    method: "GET",
+  });
 }
 
 /**
@@ -114,9 +114,9 @@ export function verifyBindPhoneRequest() {
 export function wxBindPhoneRequest(phone: string, code: string, data: any) {
   return request({
     url: `/app/h5/course/order/wxBandPhone/${phone}/${code}`,
-    method: 'POST',
-    data
-  })
+    method: "POST",
+    data,
+  });
 }
 
 /**
@@ -125,9 +125,9 @@ export function wxBindPhoneRequest(phone: string, code: string, data: any) {
 export function getAICourseOrderRequest(params: { isPage: number; state: number }) {
   return request<{ entityList: [] }>({
     url: `/app/v1/aiCourse/order`,
-    method: 'GET',
-    params
-  })
+    method: "GET",
+    params,
+  });
 }
 
 /**
@@ -136,8 +136,8 @@ export function getAICourseOrderRequest(params: { isPage: number; state: number 
 export function getSMSByPhoneRequest(phone: string) {
   return request({
     url: `mall/publicGood/login/SMS/${phone}`,
-    method: 'GET'
-  })
+    method: "GET",
+  });
 }
 
 /**
@@ -146,8 +146,8 @@ export function getSMSByPhoneRequest(phone: string) {
 export function verifyTokenRequest() {
   return request({
     url: `mall/mobile/common/verify/token`,
-    method: 'GET'
-  })
+    method: "GET",
+  });
 }
 
 /**
@@ -156,7 +156,7 @@ export function verifyTokenRequest() {
 export function weixinLoginRequest(data: any) {
   return request<IUserInfo>({
     url: `app/h5/login/wechat`,
-    method: 'POST',
-    data
-  })
+    method: "POST",
+    data,
+  });
 }

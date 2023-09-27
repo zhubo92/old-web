@@ -1,51 +1,51 @@
 <script setup lang="ts">
-import { useRoute, useRouter } from 'vue-router'
-import { computed } from 'vue'
+import { useRoute, useRouter } from "vue-router";
+import { computed } from "vue";
 
 interface ITab {
-  id: number
-  title: string
-  img: string
-  checkedImg: string
-  path: string
+  id: number;
+  title: string;
+  img: string;
+  checkedImg: string;
+  path: string;
 }
 const tabList: ITab[] = [
   {
     id: 0,
-    title: '首页',
-    img: 'https://app-resources-luojigou.luojigou.vip/FmgI7qQkTwxtGeaI4VCstadhBCdv',
-    checkedImg: 'https://app-resources-luojigou.luojigou.vip/FrIUFDzrlQgXAeSsgMQ_7BV_SBpr',
-    path: '/home/ActivityArea'
+    title: "首页",
+    img: "https://app-resources-luojigou.luojigou.vip/FmgI7qQkTwxtGeaI4VCstadhBCdv",
+    checkedImg: "https://app-resources-luojigou.luojigou.vip/FrIUFDzrlQgXAeSsgMQ_7BV_SBpr",
+    path: "/home/ActivityArea",
   },
   {
     id: 2,
-    title: '逻辑狗课',
-    img: 'https://app-resources-luojigou.luojigou.vip/FpvupKmEOYnMC23VuiXvG5VshtIZ',
-    checkedImg: 'https://app-resources-luojigou.luojigou.vip/FlieeaAbfLQ0wNNjrMJDkkjIPI36',
-    path: '/home/LuojigouCourse'
+    title: "逻辑狗课",
+    img: "https://app-resources-luojigou.luojigou.vip/FpvupKmEOYnMC23VuiXvG5VshtIZ",
+    checkedImg: "https://app-resources-luojigou.luojigou.vip/FlieeaAbfLQ0wNNjrMJDkkjIPI36",
+    path: "/home/LuojigouCourse",
   },
   {
     id: 1,
-    title: '我的课程',
-    img: 'https://app-resources-luojigou.luojigou.vip/FmvVPXbCgEmUhdaxHMT_2i2jbhrD',
-    checkedImg: 'https://app-resources-luojigou.luojigou.vip/FkFgyLWWcNygR0i7iyKWrQkmucNz',
-    path: '/home/MyCourse'
-  }
-]
+    title: "我的课程",
+    img: "https://app-resources-luojigou.luojigou.vip/FmvVPXbCgEmUhdaxHMT_2i2jbhrD",
+    checkedImg: "https://app-resources-luojigou.luojigou.vip/FkFgyLWWcNygR0i7iyKWrQkmucNz",
+    path: "/home/MyCourse",
+  },
+];
 
-const router = useRouter()
+const router = useRouter();
 
 // const checkedId = ref<number>(0);
 
-const route = useRoute()
+const route = useRoute();
 const checkedId = computed(() => {
-  console.log(route.path, 'path')
-  return tabList.find((item) => item.path === route.path)?.id || 0
-})
+  console.log(route.path, "path");
+  return tabList.find((item) => item.path === route.path)?.id || 0;
+});
 
 function changeTab(item: ITab) {
   if (checkedId.value !== item.id) {
-    router.replace(item.path)
+    router.replace(item.path);
   }
 }
 </script>

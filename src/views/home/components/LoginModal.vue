@@ -1,82 +1,82 @@
 <script setup lang="ts">
-import { getSMSByPhoneRequest } from '@/api/user'
-import { showToast, Overlay as VanOverlay } from 'vant'
-import { onUnmounted, ref, watch } from 'vue'
+import { getSMSByPhoneRequest } from "@/api/user";
+import { showToast, Overlay as VanOverlay } from "vant";
+import { onUnmounted, ref, watch } from "vue";
 
-const closeBtn = 'https://app-resources-luojigou.luojigou.vip/FsYUqsiyptxoNjMXbkS9owmT6TNm'
+const closeBtn = "https://app-resources-luojigou.luojigou.vip/FsYUqsiyptxoNjMXbkS9owmT6TNm";
 const emit = defineEmits<{
-  (e: 'close'): void
-  (e: 'login', phone: string, code: string): void
-}>()
+  (e: "close"): void;
+  (e: "login", phone: string, code: string): void;
+}>();
 
-const show = ref(false)
-const phone = ref<undefined | string>(undefined)
-const code = ref<undefined | string>(undefined)
-const smsTime = ref(60)
-const codeDisabled = ref(false)
-const timer = ref<ReturnType<typeof setInterval> | null>(null)
-const codeMsg = ref('获取验证码')
+const show = ref(false);
+const phone = ref<undefined | string>(undefined);
+const code = ref<undefined | string>(undefined);
+const smsTime = ref(60);
+const codeDisabled = ref(false);
+const timer = ref<ReturnType<typeof setInterval> | null>(null);
+const codeMsg = ref("获取验证码");
 
 function getCodeStr() {
-  codeDisabled.value = true
+  codeDisabled.value = true;
   // 验证码60秒倒计时
   if (!timer.value) {
     timer.value = setInterval(() => {
       if (smsTime.value > 0 && smsTime.value <= 60) {
-        smsTime.value--
+        smsTime.value--;
         if (smsTime.value !== 0) {
-          codeMsg.value = '重新发送(' + smsTime.value + ')'
+          codeMsg.value = "重新发送(" + smsTime.value + ")";
         } else {
-          if (timer.value) clearInterval(timer.value)
-          codeMsg.value = '获取验证码'
-          smsTime.value = 60
-          timer.value = null
-          codeDisabled.value = false
+          if (timer.value) clearInterval(timer.value);
+          codeMsg.value = "获取验证码";
+          smsTime.value = 60;
+          timer.value = null;
+          codeDisabled.value = false;
         }
       }
-    }, 1000)
+    }, 1000);
   }
 }
 async function getCode() {
-  if (!verifyPhone() || codeDisabled.value) return
-  await getSMSByPhoneRequest(phone.value as string)
-  getCodeStr()
+  if (!verifyPhone() || codeDisabled.value) return;
+  await getSMSByPhoneRequest(phone.value as string);
+  getCodeStr();
 }
 function verifyPhone() {
-  const REG = /^1[3,4,5,6,7,8,9][0-9]{9}$/
+  const REG = /^1[3,4,5,6,7,8,9][0-9]{9}$/;
   if (!phone.value || !phone.value.toString().trim()) {
-    showToast('手机号不能为空')
-    return false
+    showToast("手机号不能为空");
+    return false;
   } else if (!REG.test(phone.value)) {
-    showToast('手机号格式不对')
-    return false
+    showToast("手机号格式不对");
+    return false;
   }
-  return true
+  return true;
 }
 function verifyCode() {
   if (!code.value || !code.value.toString().trim()) {
-    showToast('验证码不能为空')
-    return false
+    showToast("验证码不能为空");
+    return false;
   }
-  return true
+  return true;
 }
 function login() {
-  if (!verifyPhone()) return
-  if (!verifyCode()) return
-  emit('login', phone.value as string, code.value as string)
+  if (!verifyPhone()) return;
+  if (!verifyCode()) return;
+  emit("login", phone.value as string, code.value as string);
 }
 
 watch(show, (val) => {
   if (!val) {
-    phone.value = undefined
-    code.value = undefined
+    phone.value = undefined;
+    code.value = undefined;
   }
-})
+});
 
 onUnmounted(() => {
-  if (timer.value) clearTimeout(timer.value)
-  timer.value = null
-})
+  if (timer.value) clearTimeout(timer.value);
+  timer.value = null;
+});
 </script>
 
 <template>

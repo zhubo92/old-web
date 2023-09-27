@@ -1,5 +1,7 @@
 <script setup lang="ts">
-const img = 'https://app-resources-luojigou.luojigou.vip/FtIYa2qZT0215ykk3NYH2WDaj_x7'
+import OpenLaunchApp from "@/components/OpenLaunchApp.vue";
+
+const img = "https://app-resources-luojigou.luojigou.vip/FtIYa2qZT0215ykk3NYH2WDaj_x7";
 </script>
 
 <template>

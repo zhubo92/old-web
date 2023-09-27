@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { getToken, registerWxOpenLaunchApp, wxUpdateAppMessageShareData } from '@/utils'
-import EnterApp from '@/views/home/components/EnterApp.vue'
-import { onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { storeToRefs } from 'pinia'
-import { useAppStore } from '@/stores'
+import { getToken, registerWxOpenLaunchApp, wxUpdateAppMessageShareData } from "@/utils";
+import EnterApp from "@/views/home/components/EnterApp.vue";
+import { onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
+import { useAppStore } from "@/stores";
 
 const activityList = [
   // 邀请有奖
   {
     id: 0,
-    img: 'https://app-resources-luojigou.luojigou.vip/FupDgyTmMZxqzdMYP-FXzMoPugDp',
-    path: '/invite/InviteHavePrize',
+    img: "https://app-resources-luojigou.luojigou.vip/FupDgyTmMZxqzdMYP-FXzMoPugDp",
+    path: "/invite/InviteHavePrize",
   },
   // 课程包
   // {
@@ -22,32 +22,32 @@ const activityList = [
   // 拼团活动
   {
     id: 2,
-    img: 'https://app-resources-luojigou.luojigou.vip/FmeAYQyeM2Ez2F0GDemvQbUlh8iX',
-    path: '/group/GroupActivity',
+    img: "https://app-resources-luojigou.luojigou.vip/FmeAYQyeM2Ez2F0GDemvQbUlh8iX",
+    path: "/group/GroupActivity",
   },
   // 0元打卡
   {
     id: 3,
-    img: 'https://img.luojigou.vip/FoLs_LTEfEIH2aYY1qFDgDYrg9Rh',
-    path: '/punch',
+    img: "https://img.luojigou.vip/FoLs_LTEfEIH2aYY1qFDgDYrg9Rh",
+    path: "/punch",
   },
-]
+];
 
-const router = useRouter()
+const router = useRouter();
 
-const { loading } = storeToRefs(useAppStore())
+const { loading } = storeToRefs(useAppStore());
 function jumpPage(path: string) {
-  router.push(path)
+  router.push(path);
 }
 
 onMounted(async () => {
-  loading.value = true
-  await getToken()
+  loading.value = true;
+  await getToken();
   await registerWxOpenLaunchApp(() => {
-    wxUpdateAppMessageShareData()
-  })
-  loading.value = false
-})
+    wxUpdateAppMessageShareData();
+  });
+  loading.value = false;
+});
 </script>
 
 <template>

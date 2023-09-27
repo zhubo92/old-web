@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Loading as VanLoading } from 'vant'
+import { Loading as VanLoading } from "vant";
 </script>
 
 <template>

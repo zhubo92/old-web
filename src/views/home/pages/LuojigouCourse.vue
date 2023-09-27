@@ -1,47 +1,47 @@
 <script setup lang="ts">
-import { getToken } from '@/utils'
-import { checkUserBuyCourseRequest, getLuojigouCourseListRequest } from '@/api/course'
-import type { ILuojigouCourse } from '@/types/course'
-import { useRouter } from 'vue-router'
-import { onMounted, reactive, ref } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useAppStore } from '@/stores'
+import { getToken } from "@/utils";
+import { checkUserBuyCourseRequest, getLuojigouCourseListRequest } from "@/api/course";
+import type { ILuojigouCourse } from "@/types/course";
+import { useRouter } from "vue-router";
+import { onMounted, reactive, ref } from "vue";
+import { storeToRefs } from "pinia";
+import { useAppStore } from "@/stores";
 
-const router = useRouter()
+const router = useRouter();
 // const img = 'https://app-resources-luojigou.luojigou.vip/FgNJ-RTvgVyvV-4t8s2fWn7b1uLe'
-const bgi = 'https://app-resources-luojigou.luojigou.vip/Fu1CAc2KUIHokifkFwwGIVZ7fwEL'
+const bgi = "https://app-resources-luojigou.luojigou.vip/Fu1CAc2KUIHokifkFwwGIVZ7fwEL";
 
-const { loading } = storeToRefs(useAppStore())
+const { loading } = storeToRefs(useAppStore());
 
-const list = ref<ILuojigouCourse[]>([])
+const list = ref<ILuojigouCourse[]>([]);
 const queryParams = reactive({
   page: 1,
   pageSize: 1000,
-})
+});
 async function getList() {
-  const { data, status } = await getLuojigouCourseListRequest(queryParams)
+  const { data, status } = await getLuojigouCourseListRequest(queryParams);
   if (status === 200) {
-    list.value = data.entityList
+    list.value = data.entityList;
   }
 }
 
 async function checkUserBuyCourse() {
-  const { data, status } = await checkUserBuyCourseRequest()
+  const { data, status } = await checkUserBuyCourseRequest();
   if (status === 200) {
     if (data) {
-      await router.push(`/courseDetail?id=${data}&mode=luojigou`)
+      await router.push(`/course/CourseDetail?id=${data}&mode=luojigou`);
     } else {
-      await router.push(`/ARGame`)
+      await router.push(`/ARGame`);
     }
   }
 }
 
 onMounted(async () => {
-  loading.value = true
-  await getToken()
-  await getList()
-  loading.value = false
-})
+  loading.value = true;
+  await getToken();
+  await getList();
+  loading.value = false;
+});
 </script>
 
 <template>

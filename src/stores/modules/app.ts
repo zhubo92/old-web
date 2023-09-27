@@ -1,10 +1,10 @@
-import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { defineStore } from "pinia";
+import { ref } from "vue";
 
-export default defineStore('app', () => {
-  const loading = ref(false)
+export default defineStore("app", () => {
+  const loading = ref(false);
 
   return {
     loading,
-  }
-})
+  };
+});
