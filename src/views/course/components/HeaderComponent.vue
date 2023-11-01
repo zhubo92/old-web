@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { popPage } from "@/utils";
 import { computed } from "vue";
+import { defaultCourseDetail } from "@/types/course";
+import type { ICourseDetail } from "@/types/course";
+import { Icon as VanIcon } from "vant";
 
 const staticImg = Object.freeze({
   share: "https://app-resources-luojigou.luojigou.vip/FqDG4Kvlv9fdU4lGJmic2sTfEOq0",
@@ -8,22 +11,9 @@ const staticImg = Object.freeze({
   collected: "https://app-resources-luojigou.luojigou.vip/FrvXnKxq2HV7UV4GZLHMX2Rm3gwx",
 });
 
-const props = withDefaults(
-  defineProps<{
-    info: {
-      isCollect: 1 | 0;
-      name: string;
-    };
-  }>(),
-  {
-    info: () => {
-      return {
-        isCollect: 0,
-        name: "",
-      };
-    },
-  },
-);
+const props = withDefaults(defineProps<{ info: ICourseDetail }>(), {
+  info: () => defaultCourseDetail(),
+});
 
 const emit = defineEmits<{
   (e: "handleClick", mode: string): void;

@@ -49,4 +49,79 @@ const textArr = computed(() => {
   </VanOverlay>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.rules {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+
+  &-container {
+    position: relative;
+    width: 273px;
+    height: 400px;
+    background: no-repeat top/contain #ffffff;
+    border-radius: 20px;
+    overflow: hidden;
+
+    &-bgi {
+      display: block;
+      width: 100%;
+      object-fit: contain;
+    }
+
+    &-text {
+      height: 229px;
+      overflow: scroll;
+
+      div {
+        margin: 0 auto;
+        width: 229px;
+        font-size: 13px;
+        font-family:
+          PingFangSC-Regular,
+          PingFang SC;
+        font-weight: 400;
+        color: #333333;
+        line-height: 20px;
+        //white-space: pre-wrap;
+      }
+
+      div + div {
+        margin-top: 11px;
+      }
+    }
+
+    &-bottom {
+      //position: absolute;
+      //bottom: 0;
+      //left: 0;
+      width: 100%;
+      height: 68px;
+      background: #ffffff;
+      border-radius: 0 0 20px 20px;
+
+      &-btn {
+        width: 229px;
+        height: 34px;
+        font-size: 14px;
+        font-family:
+          PingFangSC-Regular,
+          PingFang SC;
+        font-weight: 400;
+        color: #ffffff;
+        background: #0b57c7;
+        border-radius: 20px;
+      }
+    }
+  }
+
+  &-close {
+    display: block;
+    margin: 20px auto 0;
+    width: 35px;
+    height: 34px;
+  }
+}
+</style>

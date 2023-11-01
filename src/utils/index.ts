@@ -199,49 +199,41 @@ export function weixinLogin(authData: any): Promise<{ status: number }> {
  */
 export async function getToken() {
   return new Promise((resolve) => {
-    if (isWeixinBrowser()) {
-      const lToken = getLToken();
-      if (lToken) {
-        verifyToken().then((res) => {
-          if (res?.status === HttpCodeEnum.OK) {
-            resolve(true);
+    if (process.env.NODE_ENV === "development") {
+      resolve(getTestToken());
+    } else {
+      if (isWeixinBrowser()) {
+        const lToken = getLToken();
+        if (lToken) {
+          verifyToken().then((res) => {
+            if (res?.status === HttpCodeEnum.OK) {
+              resolve(true);
+            } else {
+              getWXCode();
+            }
+          });
+        } else {
+          const code = getQueryString("code");
+          if (code) {
+            weixinLogin({ code }).then((res) => {
+              if (res?.status === 200) resolve(true);
+
+              const { origin, pathname, hash } = window.location;
+              location.replace(`${origin}${pathname}${hash}`);
+            });
           } else {
             getWXCode();
           }
-        });
+        }
       } else {
-        const code = getQueryString("code");
-        if (code) {
-          weixinLogin({ code }).then((res) => {
-            if (res?.status === 200) resolve(true);
-
-            const { origin, pathname, hash } = window.location;
-            location.replace(`${origin}${pathname}${hash}`);
-          });
-        } else {
-          getWXCode();
-        }
+        callAppFc("getToken");
+        (window as any).returnToken = (token: string) => {
+          if (token) {
+            setSToken(token);
+            resolve(token);
+          }
+        };
       }
-    } else {
-      callAppFc("getToken");
-
-      const errTimer = setTimeout(() => {
-        getTestToken().then(() => {
-          resolve("");
-        });
-      }, 1);
-
-      const clear = () => {
-        clearTimeout(errTimer);
-      };
-
-      (window as any).returnToken = (token: string) => {
-        if (token) {
-          clear();
-          setSToken(token);
-          resolve(token);
-        }
-      };
     }
   });
 }
@@ -316,4 +308,55 @@ export function filterImgCover(imgsStr: string, mode = "img") {
     console.log(err, "filterImgCover");
     return imgsStr;
   }
+}
+
+export function wxPayFc(record) {
+  return new Promise(async (resolve) => {
+    // 调用微信JSAPI
+    function onBridgeReady(record) {
+      console.log("调用微信支付WeixinJSBridge：", record);
+      return new Promise((resolve, reject) => {
+        WeixinJSBridge.invoke(
+          "getBrandWCPayRequest",
+          {
+            appId: record.appId, // 公众号名称，由商户传入
+            timeStamp: record.timeStamp, // 时间戳
+            nonceStr: record.nonceStr, // 随机串
+            package: record.package, // 预支付id
+            signType: record.signType, // 微信签名方式
+            paySign: record.paySign, // 微信签名
+          },
+          (res) => {
+            console.log("支付结果:", res.err_msg);
+            if (res.err_msg === "get_brand_wcpay_request:ok") {
+              // 使用以上方式判断前端返回,微信团队郑重提示：
+              // res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+              resolve(true);
+            } else if (res.err_msg === "get_brand_wcpay_request:cancel") {
+              showToast("已取消");
+              resolve(false);
+            } else if (res.err_msg === "get_brand_wcpay_request:fail") {
+              showToast("支付失败");
+              resolve(false);
+            } else {
+              showToast("支付错误");
+              resolve(false);
+            }
+          },
+        );
+      });
+    }
+
+    if (typeof WeixinJSBridge === "undefined") {
+      // 微信浏览器内置对象。参考微信官方文档
+      if (document.addEventListener) {
+        document.addEventListener("WeixinJSBridgeReady", onBridgeReady(record), false);
+      } else if (document.attachEvent) {
+        document.attachEvent("WeixinJSBridgeReady", onBridgeReady(record));
+        document.attachEvent("onWeixinJSBridgeReady", onBridgeReady(record));
+      }
+    } else {
+      resolve(await onBridgeReady(record));
+    }
+  });
 }

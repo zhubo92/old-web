@@ -47,7 +47,7 @@ export function getAICourseItemRequest(params: { skuId: string }) {
 }
 
 export function handleCollectCourseRequest(data: { aiCourseSpuId: string; aiCourseSkuId: string }) {
-  return request({
+  return request<number>({
     url: `app/aiCourse/collect`,
     method: "POST",
     data,

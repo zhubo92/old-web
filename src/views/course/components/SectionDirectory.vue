@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // 正在播放按钮
 import JumpApplets from "@/views/course/components/JumpApplets.vue";
-import type { IChapter, IChapterItem } from "@/types/course";
+import type { IChapter, IChapterItem, IChapterItemVideo } from "@/types/course";
 import { computed, onMounted, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
@@ -50,10 +50,22 @@ const props = withDefaults(
 );
 
 const emit = defineEmits<{
-  (e: "try", video: string, item: IChapterItem): void;
+  (e: "try", video: IChapterItemVideo, item: IChapterItem): void;
 }>();
 
 const isApp = !isWeixinBrowser();
+
+const showChapter = computed(() => {
+  return props.showChapter;
+});
+
+const chapterList = computed(() => {
+  return props.chapterList;
+});
+
+const unlock = computed(() => {
+  return props.unlock;
+});
 
 const isLuojigou = computed(() => {
   try {
@@ -98,14 +110,13 @@ function setFullScreen(state = false) {
 function config() {
   registerWxOpenLaunchApp(() => {}, getCWXSignature);
 }
-// todo
-function jumpGame(path) {
+function jumpGame(path: string) {
   if (isApp) {
     const token = window.sessionStorage.getItem("token");
-    window.localStorage.setItem("token", token);
+    if (token) window.localStorage.setItem("token", token);
   }
   setFullScreen(true);
-  const url = path + `&id=${$route.query.id}`;
+  const url = path + `&id=${id}`;
   const length = history.length;
   if (length > 1) {
     location.href = url;
@@ -114,9 +125,9 @@ function jumpGame(path) {
   }
 }
 
-onMounted(async () => {
+onMounted(() => {
   loading.value = true;
-  await setFullScreen();
+  setFullScreen();
   loading.value = false;
 });
 

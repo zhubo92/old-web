@@ -47,6 +47,18 @@ export interface ILuojigouCourse {
   categoryName: string;
   avatars: string[];
 }
+
+export interface IChapterItemVideo {
+  id: null | string;
+  videoUrl: null | string;
+  parentId: null | string;
+  createTime: null | string;
+  updateTime: null | string;
+  width: null | string;
+  height: null | string;
+  thumbnailUrl: null | string;
+  duration: string;
+}
 export interface IChapterItem {
   id: string;
   name: string;
@@ -74,7 +86,7 @@ export interface IChapterItem {
   semesterLeveCode: number;
   index?: number;
   sectionIndex?: number;
-  video: string;
+  video: IChapterItemVideo;
 }
 export interface IChapter {
   id: string;
@@ -134,7 +146,8 @@ export interface ICourseDetail {
   chapterList: IChapter[];
   cashbackActivity?: 1 | 0;
   cashbackActivityId?: number;
-  checkInExplain?: number;
+  checkInExplain?: string;
+  skuId?: string;
 }
 
 export function defaultCourseDetail() {

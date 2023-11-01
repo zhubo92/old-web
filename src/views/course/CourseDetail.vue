@@ -11,14 +11,17 @@ import {
   getAICourseItemRequest,
   handleCollectCourseRequest,
 } from "@/api/course";
-import { Swipe as VanSwipe } from "vant";
+import { Swipe as VanSwipe, SwipeItem as VanSwipeItem } from "vant";
 import { defaultCourseDetail } from "@/types/course";
-import type { ICourseDetail } from "@/types/course";
+import type { ICourseDetail, IChapterItem, IChapterItemVideo } from "@/types/course";
 import SectionDirectory from "@/views/course/components/SectionDirectory.vue";
 import PunchRules from "@/views/course/components/PunchRules.vue";
 import HeaderComponent from "@/views/course/components/HeaderComponent.vue";
+import { filterTry } from "@/utils/filters";
+import BottomBtn from "@/views/course/components/BottomBtn.vue";
+import LookCourse from "@/views/course/components/LookCourse.vue";
+import ConfirmOrderV2 from "@/views/course/components/ConfirmOrderV2.vue";
 
-const commentLogo = "https://app-resources-luojigou.luojigou.vip/FoF6OZ07OatN0SoxAeik3u3M2BUM";
 const luojigouCourseSkuIdList = [
   "1568062284888866817",
   "1580445037357817858",
@@ -49,14 +52,12 @@ const router = useRouter();
 const route = useRoute();
 const { fullScreen, mode, id } = route.query;
 const { loading } = storeToRefs(useAppStore());
-const orderId = ref("");
 const payType = ref("");
 const checkedId = ref(0);
 const swiperHeight = ref(1000);
 const tabFixTop = ref(false);
 const payShow = ref(false);
 const showRules = ref(false);
-const commentList = ref([]);
 const mySwiperRef = ref<SwipeInstance | null>(null);
 const descriptionRef = ref<HTMLElement | null>(null);
 const directoryRef = ref<HTMLElement | null>(null);
@@ -85,25 +86,6 @@ const isLuojigouCourse = computed(() => {
     return false;
   }
 });
-
-function filterTry(val: number) {
-  if (val === 0) {
-    return "试看";
-  } else if (val === 1) {
-    return "试听";
-  }
-  return "试看";
-}
-// 筛选媒体类型
-function filterMediaType(val: number) {
-  if (val === 0) {
-    return "录播";
-  } else if (val === 1) {
-    return "音频";
-  } else if (val === 2) {
-    return "图文";
-  }
-}
 
 async function handleCollectCourse() {
   const { status, msg } = await handleCollectCourseRequest({
@@ -142,10 +124,10 @@ function paySuccess() {
     navAppPage("course/punchActivities?url=" + encodeURIComponent(route), null, "", true);
   }
 }
-function handleTry(record, item) {
-  buried("clickTryLookBtn", { ...info, ...record, ...route.query });
+function handleTry(video: IChapterItemVideo, item: IChapterItem) {
+  buried("clickTryLookBtn", { ...info, ...video, ...route.query });
 
-  console.log("try", record, item);
+  console.log("try", video, item);
   if (isApp) {
     const { origin, pathname } = window.location;
     const { aiCourseSkuId, name, sectionIndex, index } = item;
@@ -165,7 +147,7 @@ function handleTry(record, item) {
     });
   } else {
     backTop();
-    Object.assign(playMedia, record);
+    Object.assign(playMedia, video);
   }
 }
 // 引流课程
@@ -210,8 +192,8 @@ function changeTab(id: number) {
 function changeSwiper(index: number) {
   changeTab(index);
 
-  let description = 0;
-  let directory = 0;
+  let description = 1000;
+  let directory = 1000;
 
   if (descriptionRef.value) {
     description = descriptionRef.value.offsetHeight;
@@ -221,6 +203,9 @@ function changeSwiper(index: number) {
   }
 
   const list = [description, directory];
+
+  console.log(descriptionRef.value, directoryRef.value, list, "description, directory");
+
   swiperHeight.value = list[index];
 }
 // 设置页面标题
@@ -431,22 +416,24 @@ onMounted(async () => {
       </VanSwipeItem>
       <VanSwipeItem v-if="Array.isArray(info.chapterList)">
         <!--目录-->
-        <SectionDirectory
-          ref="directory"
-          :chapterList="info.chapterList"
-          :unlock="info.hasPaid === 1"
-          :showChapter="info.showChapter"
-          @try="handleTry"
-        />
+        <div ref="directoryRef">
+          <SectionDirectory
+            :chapterList="info.chapterList"
+            :unlock="info.hasPaid === 1"
+            :showChapter="info.showChapter"
+            @try="handleTry"
+          />
+        </div>
       </VanSwipeItem>
     </VanSwipe>
 
     <!--底部-->
-    <bottom-btn v-if="info.hasPaid === 0" :info="info" @buy="goBuy" />
-    <look-course v-else-if="!isApp" :info="info" />
+    <BottomBtn v-if="info.hasPaid === 0" :info="info" @buy="goBuy" />
+
+    <LookCourse v-else-if="!isApp" :info="info" />
 
     <!--支付弹窗-->
-    <confirm-order-v2
+    <ConfirmOrderV2
       :isPunch="isPunch"
       :info="info"
       :payType="payType"
