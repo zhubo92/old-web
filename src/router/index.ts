@@ -87,6 +87,14 @@ const router = createRouter({
         title: "课程详情",
       },
     },
+    {
+      path: "/course/AudioDetail",
+      name: "AudioDetail",
+      component: () => import("@/views/course/AudioDetail.vue"),
+      meta: {
+        title: "课程详情",
+      },
+    },
   ],
 });
 
