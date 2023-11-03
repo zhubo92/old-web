@@ -4,7 +4,8 @@ import { defaultCourseDetail } from "@/types/course";
 import { computed, nextTick, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { backTop, buried, getToken, isWeixinBrowser } from "@/utils";
-import { SwipeInstance, Swipe as VanSwipe, SwipeItem as VanSwipeItem } from "vant";
+import { Swipe as VanSwipe, SwipeItem as VanSwipeItem } from "vant";
+import type { SwipeInstance } from "vant";
 import { getAICourseItemBank2Request, getAICourseItemRequest } from "@/api/course";
 import { storeToRefs } from "pinia";
 import { useAppStore } from "@/stores";
@@ -88,7 +89,7 @@ function toggleTab(id: number) {
   // }
   // 切换tab时要把内容跳转到顶部
   if (tabFixTop.value) {
-    document.querySelector("#tab").scrollIntoView({
+    document.querySelector("#tab")?.scrollIntoView({
       behavior: "smooth",
     });
   }
@@ -104,8 +105,10 @@ function init() {
 function changeSwiper(index: number) {
   toggleTab(index);
   try {
-    const description = descriptionRef.value.offsetHeight;
-    const directory = directoryRef.value.offsetHeight;
+    let description = 1000;
+    if (descriptionRef.value) description = descriptionRef.value.offsetHeight;
+    let directory = 1000;
+    if (directoryRef.value) directory = directoryRef.value.offsetHeight;
     // const comment = $refs.comment && $refs.comment.$el && $refs.comment.$el.offsetHeight;
 
     console.log(description, directory, "comment");
@@ -153,9 +156,10 @@ function changeImg() {
   nextTick();
 
   setTimeout(() => {
-    const description = descriptionRef.value.offsetHeight;
-    const directory = directoryRef.value.offsetHeight;
-    // const comment = $refs.comment && $refs.comment.$el && $refs.comment.$el.offsetHeight;
+    let description = 1000;
+    if (descriptionRef.value) description = descriptionRef.value.offsetHeight;
+    let directory = 1000;
+    if (directoryRef.value) directory = directoryRef.value.offsetHeight;
 
     console.log(description, directory, "comment");
     const list = [description, directory];
@@ -202,7 +206,7 @@ onMounted(async () => {
   const tab = document.querySelector("#tab");
   window.addEventListener("scroll", () => {
     // console.log(tab.getBoundingClientRect().top);
-    tabFixTop.value = tab.getBoundingClientRect().top < 0;
+    if (tab) tabFixTop.value = tab.getBoundingClientRect().top < 0;
     // console.log(this.tabFixTop);
   });
 
@@ -217,10 +221,10 @@ onMounted(async () => {
     <div class="audio">
       <!--课程详情-->
       <div class="audio-info">
-        <template v-if="info.imgCover">
+        <div v-if="info.imgCover">
           <img :src="info.imgCover" alt="" class="audio-info-logo" />
           <img :src="coverShadow" alt="" class="audio-info-coverShadow" />
-        </template>
+        </div>
         <div class="audio-info-text" v-if="info.name">
           <div class="audio-info-text-title">{{ info.name }}</div>
           <div class="audio-info-text-desc">

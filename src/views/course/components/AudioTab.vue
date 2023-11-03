@@ -17,7 +17,7 @@ const greenBar = "https://app-resources-luojigou.luojigou.vip/FiTaQnTOa55c4jH-IT
 
 const props = defineProps<{
   tabId: number;
-  fixed: boolean;
+  fixed?: boolean;
   num?: number;
 }>();
 

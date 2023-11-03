@@ -302,9 +302,9 @@ onMounted(async () => {
 
 <template>
   <div class="course-detail">
-    <template v-if="showHeader">
+    <div v-if="showHeader">
       <HeaderComponent :info="info" @handleClick="handleClick" />
-    </template>
+    </div>
 
     <!--顶部的tab栏-->
     <div
@@ -330,7 +330,7 @@ onMounted(async () => {
     <!--顶部封面图-->
     <div class="course-detail-cover">
       <!--播放中-->
-      <template v-if="playMedia.videoUrl">
+      <div v-if="playMedia.videoUrl">
         <video
           :src="playMedia.videoUrl"
           autoplay
@@ -338,7 +338,7 @@ onMounted(async () => {
           ref="video"
           :poster="playMedia.videoUrl + '?vframe/jpg/offset/1'"
         ></video>
-      </template>
+      </div>
       <!--未播放-->
       <img v-else :src="info.imgCover" alt="" />
     </div>
@@ -346,15 +346,15 @@ onMounted(async () => {
     <!--课程主要信息-->
     <div :class="['course-detail-info', playMedia.videoUrl && 'info2']">
       <!--逻辑狗课程已经购买后不显示价格-->
-      <template v-if="isLuojigouCourse && info.hasPaid === 1"></template>
-      <template v-else-if="info.price !== 0 && info.price">
+      <div v-if="isLuojigouCourse && info.hasPaid === 1"></div>
+      <div v-else-if="info.price !== 0 && info.price">
         <div class="course-detail-info-top">
           <div class="course-detail-info-top-price">￥{{ info.price.toFixed(2) }}</div>
           <del v-if="info.markingPrice" class="course-detail-info-top-markingPrice">
             原价:¥{{ info.markingPrice.toFixed(2) }}
           </del>
         </div>
-      </template>
+      </div>
       <template v-else-if="info.price === 0">
         <div class="course-detail-info-price">免费</div>
       </template>

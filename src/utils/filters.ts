@@ -14,6 +14,8 @@ export function filterTry(val: number) {
     return "试看";
   } else if (val === 1) {
     return "试听";
+  } else if (val === 3) {
+    return "试读";
   }
   return "";
 }

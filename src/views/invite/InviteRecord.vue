@@ -58,7 +58,7 @@ onMounted(async () => {
 
 <template>
   <div class="record">
-    <template v-if="Array.isArray(list) && list.length !== 0">
+    <div v-if="Array.isArray(list) && list.length !== 0">
       <div v-for="item in list" :key="item.shareEncourageId" class="record-item">
         <div class="record-item-title">
           <div class="record-item-title-text">{{ item.activityName }}</div>
@@ -87,7 +87,7 @@ onMounted(async () => {
           </div>
         </div>
       </div>
-    </template>
+    </div>
     <div class="empty" v-else>
       <img :src="staticImg.emptyLogo" alt="" class="empty-logo" />
 

@@ -87,6 +87,7 @@ export interface IChapterItem {
   index?: number;
   sectionIndex?: number;
   video: IChapterItemVideo;
+  audio?: any;
 }
 export interface IChapter {
   id: string;
@@ -98,11 +99,38 @@ export interface IChapter {
   coverImgUrl: null | string;
   itemList: IChapterItem[];
 }
+
+export interface ISpu {
+  id: string;
+  name: string;
+  imgCover: string;
+  imgCoverMini: string;
+  videoUrl: string;
+  createTime: string;
+  updateTime: string;
+  price: number;
+  markingPrice: number;
+  categoryId: string;
+  suitAge: string;
+  parentNotice: null;
+  courseCount: number;
+  description: null;
+  outline: null;
+  notice: null;
+  simpleDescription: string;
+  mediaType: number;
+  status: number;
+  isDelete: number;
+  sort: number;
+  showChapter: number;
+  isShow: boolean;
+  showCoverImg: number;
+}
 export interface ICourseDetail {
   id: string;
   name: string;
   imgCover: string;
-  imgCoverMini: null | string;
+  imgCoverMini: string;
   createTime: string;
   updateTime: string;
   price: number;
@@ -123,11 +151,11 @@ export interface ICourseDetail {
   courseType: number;
   subCategoryId: string;
   activityTag: null;
-  courseTags: null;
+  courseTags: string[];
   paidCount: number;
   latestLearnedRecordId: null;
   latestLearnedRecord: null;
-  abilityList: null;
+  abilityList: any[];
   commentCount: number;
   shareCount: number;
   collectCount: number;
@@ -137,25 +165,31 @@ export interface ICourseDetail {
   isShare: number;
   imgCoverWidth: null;
   imgCoverHeight: null;
-  shareUrl: null;
-  shareUrlQRCode: null;
+  shareUrl: string;
+  shareUrlQRCode: string;
   groupBuyActivity: null;
   groupBuyActivityId: null;
   groupBuyActivityUrl: null;
-  totalLearnUser: null;
+  totalLearnUser: number;
+  userCount: number;
+  categoryName: string;
+  cashbackActivity: number;
+  cashbackActivityId: null;
+  checkInExplain: null | string;
   chapterList: IChapter[];
-  cashbackActivity?: 1 | 0;
-  cashbackActivityId?: number;
-  checkInExplain?: string;
-  skuId?: string;
+  spu: ISpu;
+  showCoverImg: number;
+  totalStarCount: number;
+  getStarCount: number;
+  trialLearn: number;
 }
 
-export function defaultCourseDetail() {
+export function defaultCourseDetail(): ICourseDetail {
   return {
     id: "",
     name: "",
     imgCover: "",
-    imgCoverMini: null,
+    imgCoverMini: "",
     createTime: "",
     updateTime: "",
     price: 0,
@@ -176,11 +210,11 @@ export function defaultCourseDetail() {
     courseType: 0,
     subCategoryId: "",
     activityTag: null,
-    courseTags: null,
+    courseTags: [],
     paidCount: 0,
     latestLearnedRecordId: null,
     latestLearnedRecord: null,
-    abilityList: null,
+    abilityList: [],
     commentCount: 0,
     shareCount: 0,
     collectCount: 0,
@@ -190,12 +224,47 @@ export function defaultCourseDetail() {
     isShare: 0,
     imgCoverWidth: null,
     imgCoverHeight: null,
-    shareUrl: null,
-    shareUrlQRCode: null,
+    shareUrl: "",
+    shareUrlQRCode: "",
     groupBuyActivity: null,
     groupBuyActivityId: null,
     groupBuyActivityUrl: null,
-    totalLearnUser: null,
+    totalLearnUser: 0,
+    userCount: 0,
+    categoryName: "",
+    cashbackActivity: 0,
+    cashbackActivityId: null,
+    checkInExplain: null,
     chapterList: [],
+    spu: {
+      id: "",
+      name: "",
+      imgCover: "",
+      imgCoverMini: "",
+      videoUrl: "",
+      createTime: "",
+      updateTime: "",
+      price: 0,
+      markingPrice: 0,
+      categoryId: "",
+      suitAge: "",
+      parentNotice: null,
+      courseCount: 0,
+      description: null,
+      outline: null,
+      notice: null,
+      simpleDescription: "",
+      mediaType: 0,
+      status: 0,
+      isDelete: 0,
+      sort: 0,
+      showChapter: 0,
+      isShow: false,
+      showCoverImg: 0,
+    },
+    showCoverImg: 0,
+    totalStarCount: 0,
+    getStarCount: 0,
+    trialLearn: 0,
   };
 }

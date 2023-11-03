@@ -162,7 +162,7 @@ onUnmounted(() => {});
           </div>
         </div>
         <!--逻辑狗课程-->
-        <template v-if="isLuojigou">
+        <div v-if="isLuojigou">
           <div v-if="!item.isLock" class="chapter-item-btns">
             <!--<div class="chapter-item-btn">-->
             <!--  <img :src="item.isLock ? practice : noPractice" alt="" class="chapter-item-btn-img">-->
@@ -186,7 +186,7 @@ onUnmounted(() => {});
             <img :src="notUnlockedBtn2" alt="" />
             <!--          <span>试看</span>-->
           </div>
-        </template>
+        </div>
         <!--普通课程-->
         <div v-else class="btn">
           <img :src="item.payType === 0 ? notUnlockedBtn : pauseBtn" alt="" />

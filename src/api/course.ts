@@ -1,6 +1,6 @@
 import request from "@/utils/request";
 import type { IQueryParams } from "@/types/http-codes";
-import type { ILuojigouCourse } from "@/types/course";
+import type { ICourseDetail, ILuojigouCourse } from "@/types/course";
 export function getLuojigouCourseListRequest(params: IQueryParams) {
   return request<{ entityList: ILuojigouCourse[] }>({
     url: `app/app/gameCourse/list`,
@@ -19,17 +19,6 @@ export function checkUserBuyCourseRequest() {
   });
 }
 
-/**
- * 收藏课程
- */
-// export function handleCollectCourseRequest(data) {
-//   return request({
-//     url: `app/aiCourse/collect`,
-//     method: 'POST',
-//     data
-//   })
-// }
-
 export function getAICourseItemBank2Request(params: { skuId: string }) {
   return request({
     url: `app/app/gameCourse/bank/2`,
@@ -39,7 +28,7 @@ export function getAICourseItemBank2Request(params: { skuId: string }) {
 }
 
 export function getAICourseItemRequest(params: { skuId: string }) {
-  return request({
+  return request<ICourseDetail>({
     url: `app/v1/AICourse/item`,
     method: "GET",
     params,

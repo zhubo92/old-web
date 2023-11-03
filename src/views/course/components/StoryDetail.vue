@@ -89,7 +89,7 @@ function toggleOpen(val: any) {
         <img v-else :src="listClose" class="listClose" alt="" />
       </div>
 
-      <template v-if="list.isOpen">
+      <div v-if="list.isOpen">
         <div
           v-for="item in list.itemList"
           :key="item.id"
@@ -102,10 +102,10 @@ function toggleOpen(val: any) {
               backgroundImage: `url(${item.imgCover})`,
             }"
           >
-            <template v-if="item.payType === 0">
+            <div v-if="item.payType === 0">
               <span class="story-item-img-shadow"></span>
               <img :src="unlocked" class="unlocked" alt="" />
-            </template>
+            </div>
           </div>
 
           <div class="story-item-info">
@@ -127,7 +127,7 @@ function toggleOpen(val: any) {
 
           <img :src="itemClose" class="story-item-open" alt="" />
         </div>
-      </template>
+      </div>
     </div>
   </div>
 </template>

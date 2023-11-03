@@ -19,6 +19,7 @@ import {
 } from "@/api/me";
 import areaList from "@/assets/js/area";
 import type { IAddressForm } from "@/types/me";
+import TopNav from "@/views/group/components/TopNav.vue";
 
 const staticImg = {
   select: "https://img.luojigou.vip/FlRjyEjCnwURpW1oPyLt-lZ_hgdc",
@@ -128,7 +129,7 @@ onMounted(async () => {
 
 <template>
   <div class="add-address">
-    <top-nav :type="3" :title="'新增地址'" />
+    <TopNav :type="3" :title="'新增地址'" />
 
     <VanForm validate-first @failed="onFailed" @submit="submit">
       <VanField v-model="form.name" name="name" label="收货人" placeholder="请输入收货人姓名" />

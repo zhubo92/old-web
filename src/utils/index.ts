@@ -10,6 +10,7 @@ import { HttpCodeEnum } from "@/types/http-codes";
 import { showToast } from "vant";
 import { clearData, getLToken, setSToken, setLToken, setUserInfo } from "@/utils/storage";
 import html2canvas from "html2canvas";
+import * as process from "process";
 
 export function getImageUrl(name: string) {
   return new URL(`../assets/images/${name}.png`, import.meta.url).href;
@@ -87,16 +88,41 @@ export function launchMiniProgram(params: { appId: string; path: string }) {
   callAppFc("launchMiniProgram", params);
 }
 
-export function shareToFriendForReward(params: {
-  title: string;
-  imgUrl: string;
-  inviteCode: string;
-}) {
-  callAppFc("shareToFriendForReward", params);
+export function shareToFriendForReward(
+  params: {
+    title?: string;
+    imgUrl?: string;
+    inviteCode: string;
+    teamLeader?: 0 | 1;
+    productImage?: string;
+    activityPrice?: number;
+    originalPrice?: number;
+    population?: number;
+  },
+  callback?: () => void,
+) {
+  callAppFc("shareToFriendForReward", params, callback);
 }
 
 export function shareCommonCourse(course: any) {
   callAppFc("shareCommonCourse", { course });
+}
+export function shareToWechatWeb(
+  id: number,
+  image = "https://app-resources-luojigou.luojigou.vip/Fk6jPFoAXOcNcmGk1nBi_S6z6vet",
+  thumb = "https://app-resources-luojigou.luojigou.vip/Fk6jPFoAXOcNcmGk1nBi_S6z6vet",
+  description = "开团后邀请好友拼团，团满即得！",
+  url = window.location.href,
+  title = "宝贝启蒙必修课，超值拼团限时购！",
+) {
+  callAppFc("shareToWechatWeb", {
+    scene: id,
+    image,
+    thumb,
+    description,
+    url,
+    title,
+  });
 }
 
 /**
@@ -241,7 +267,14 @@ export async function getToken() {
 /**
  * 注册wx
  */
-export async function registerWxOpenLaunchApp(callback?: () => void, request = getCWXSignature) {
+export async function registerWxOpenLaunchApp(
+  callback?: () => void,
+  request = getCWXSignature,
+  jsApiList = ["updateAppMessageShareData", "getLocation", "closeWindow"],
+  openTagList = ["wx-open-launch-app"],
+) {
+  if (process.env.NODE_ENV === "development") return Promise.resolve(true);
+
   return new Promise((resolve) => {
     request().then((res) => {
       const { data, status } = res;
@@ -254,9 +287,9 @@ export async function registerWxOpenLaunchApp(callback?: () => void, request = g
           nonceStr,
           signature,
           // 必填，需要使用的JS接口列表
-          jsApiList: ["updateAppMessageShareData", "getLocation", "closeWindow"],
+          jsApiList,
           // 可选，需要使用的开放标签列表，例如['wx-open-launch-app']
-          openTagList: ["wx-open-launch-app"],
+          openTagList,
         });
         wx.error(() => {
           console.log("error");
@@ -290,6 +323,21 @@ export function wxUpdateAppMessageShareData(
       console.log("设置成功");
     },
   });
+}
+
+export function shareToFriendForRewardDirectly(
+  params: {
+    teamLeader: 0 | 1;
+    productImage: string;
+    activityPrice: number;
+    originalPrice: number;
+    population: number;
+    inviteCode: string;
+    type: string;
+  },
+  callback?: () => void,
+) {
+  callAppFc("shareToFriendForRewardDirectly", params, callback);
 }
 
 /**

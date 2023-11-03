@@ -6,6 +6,7 @@ import { getToken } from "@/utils";
 import { useRouter } from "vue-router";
 import { getMobileAddressRequest } from "@/api/me";
 import type { IShoppingAddress } from "@/types/me";
+import TopNav from "@/views/group/components/TopNav.vue";
 
 const staticImg = {
   defaultLabel: "https://app-resources-luojigou.luojigou.vip/FtqjzwttnqxYaF4KGn3917vO7ebG",
@@ -46,7 +47,7 @@ onMounted(async () => {
   <div class="address-list">
     <TopNav :type="3" :title="'收货地址'" />
 
-    <template v-if="list.length !== 0">
+    <div v-if="list.length !== 0">
       <div v-for="item in list" :key="item.id" class="address-item">
         <div class="address-item-left" @click="returnAddress(item.id)">
           <div class="address-item-left-top">
@@ -71,7 +72,7 @@ onMounted(async () => {
           @click="handleAddress(item.id)"
         />
       </div>
-    </template>
+    </div>
 
     <div class="empty" v-else>
       <img :src="staticImg.emptyLogo" alt="" class="empty-logo" />

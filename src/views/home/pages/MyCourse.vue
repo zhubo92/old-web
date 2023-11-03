@@ -8,28 +8,12 @@ import { useRouter } from "vue-router";
 import { onMounted, reactive, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useAppStore } from "@/stores";
+import { defaultUserInfo } from "@/types/user";
 
 const router = useRouter();
 const { loading } = storeToRefs(useAppStore());
 
-const info = reactive<IUserInfo>({
-  appId: null,
-  city: "",
-  country: "",
-  errcode: null,
-  errmsg: null,
-  headimgurl:
-    "https://thirdwx.qlogo.cn/mmopen/vi_32/mE833f4fRB1phY70o9VtskybL5peoFgNoiaWH6cKynq5gGIGXgudbU4CabVE7iamGeuQwav6ghUG7xgOD0FxyMLA/132",
-  id: null,
-  language: "",
-  nickname: "zhū bō",
-  openid: "o8gfxs-8quGUYCSJIWNClkvF9oUE",
-  privilege: [],
-  province: "",
-  sex: 0,
-  subscribe: 0,
-  unionid: "o75lRwbdLj2kLdcJbcwSudc-o0Ms",
-});
+const info = reactive<IUserInfo>(defaultUserInfo());
 const bindWx = ref<boolean>(false);
 const show = ref<boolean>(false);
 const list = ref<ICourseOrder[]>([]);
@@ -48,7 +32,7 @@ async function bindPhone(phone: string, code: string) {
 }
 function lookCourse(record: ICourseOrder) {
   router.push({
-    path: "/groupCourse",
+    path: "/group/GroupCourse",
     query: {
       id: record?.sku?.id,
     },

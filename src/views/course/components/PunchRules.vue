@@ -5,7 +5,7 @@ import { computed } from "vue";
 const props = withDefaults(
   defineProps<{
     show: boolean;
-    rules: string;
+    rules?: string | null;
   }>(),
   {
     show: false,

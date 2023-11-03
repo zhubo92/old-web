@@ -5,7 +5,15 @@ const router = createRouter({
   routes: [
     {
       path: "/",
-      redirect: "/home",
+      redirect: "/home/HomeNav",
+    },
+    {
+      path: "/home/HomeNav",
+      name: "HomeNav",
+      component: () => import("@/views/home/HomeNav.vue"),
+      meta: {
+        title: "首页导航",
+      },
     },
     {
       path: "/home",
@@ -39,14 +47,46 @@ const router = createRouter({
         },
       ],
     },
-    // {
-    //   path: "/group/GroupActivity",
-    //   name: "GroupActivity",
-    //   component: () => import("@/views/group/GroupActivity.vue"),
-    //   meta: {
-    //     title: "拼团活动"
-    //   }
-    // },
+    {
+      path: "/group/GroupActivity",
+      name: "GroupActivity",
+      component: () => import("@/views/group/GroupActivity.vue"),
+      meta: {
+        title: "拼团活动",
+      },
+    },
+    {
+      path: "/group/GroupCommodity",
+      name: "GroupCommodity",
+      component: () => import("@/views/group/GroupCommodity.vue"),
+      meta: {
+        title: "拼团商品详情",
+      },
+    },
+    {
+      path: "/group/GroupCourse",
+      name: "GroupCourse",
+      component: () => import("@/views/group/GroupCourse.vue"),
+      meta: {
+        title: "拼团课程详情",
+      },
+    },
+    {
+      path: "/group/GroupDetail",
+      name: "GroupDetail",
+      component: () => import("@/views/group/GroupDetail.vue"),
+      meta: {
+        title: "拼团详情",
+      },
+    },
+    {
+      path: "/group/GroupOrder",
+      name: "GroupOrder",
+      component: () => import("@/views/group/GroupOrder.vue"),
+      meta: {
+        title: "拼团订单",
+      },
+    },
     {
       path: "/invite/InviteHavePrize",
       name: "InviteHavePrize",

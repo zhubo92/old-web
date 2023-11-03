@@ -54,7 +54,7 @@ const props = withDefaults(
     info: ICourseDetail;
     show: boolean;
     payType: string;
-    isPunch: boolean;
+    isPunch?: boolean;
   }>(),
   { info: () => defaultCourseDetail(), show: false, payType: "微信支付", isPunch: false },
 );
@@ -100,9 +100,6 @@ watch(show, (val) => {
   }
 });
 
-function init() {
-  payList.value = ALL_PAY_LIST.slice(0);
-}
 async function getMagicCoinsPay() {
   const { status } = await getMagicCoinsPayRequest(orderId.value);
   if (status === 200) {
@@ -367,14 +364,12 @@ function goPay() {
         <img :src="info.imgCover" alt="" class="info-logo" />
         <div class="info-right">
           <div class="info-right-title">{{ info.name }}</div>
-          <template v-if="info.price !== 0 && info.price">
+          <div v-if="info.price !== 0 && info.price">
             <div class="info-right-price">
               <span>￥</span>{{ info.price ? info.price.toFixed(2) : 0 }}
             </div>
-          </template>
-          <template v-else>
-            <div class="info-right-price">免费</div>
-          </template>
+          </div>
+          <div v-else class="info-right-price">免费</div>
         </div>
       </div>
 

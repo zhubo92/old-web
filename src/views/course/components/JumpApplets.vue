@@ -105,7 +105,7 @@ onMounted(async () => {
         <!--练一练-->
       </component>
     </wx-open-launch-weapp>
-    <template v-else-if="isFinish && isApp">
+    <div v-else-if="isFinish && isApp">
       <div style="display: flex; flex-direction: column; align-items: center" @click="jump">
         <img
           src="https://app-resources-luojigou.luojigou.vip/FjONELpanlJjuAaIMZkO-vudduD6"
@@ -128,8 +128,8 @@ onMounted(async () => {
           练一练
         </span>
       </div>
-    </template>
-    <template v-else>
+    </div>
+    <div v-else>
       <div style="display: flex; flex-direction: column; align-items: center" @click="handleToast">
         <img
           src="https://app-resources-luojigou.luojigou.vip/Ft6O3xstCti6HUvkBM7jAwkGuiU3"
@@ -152,7 +152,7 @@ onMounted(async () => {
           练一练
         </span>
       </div>
-    </template>
+    </div>
   </div>
 </template>
 
