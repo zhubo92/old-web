@@ -2,8 +2,8 @@
 import { Icon as VanIcon } from "vant";
 import { callAppFc, isWeixinBrowser, shareToFriendForReward } from "@/utils";
 import { computed, onMounted, ref } from "vue";
-import { IGroupCourse } from "@/types/group";
-import { info } from "sass";
+import type { IGroupCommodity, IGroupCourse } from "@/types/group";
+import { useRoute } from "vue-router";
 
 const returnLogo = "https://app-resources-luojigou.luojigou.vip/FvCDtkxA0BYEsp2wMOK4f1XYx9gd";
 const shareLogo = "https://app-resources-luojigou.luojigou.vip/FqR6DcgFJAA15qCBt3568apbXinp";
@@ -12,11 +12,13 @@ const collectedBtn = "https://app-resources-luojigou.luojigou.vip/FrvXnKxq2HV7UV
 const shareBtn = "https://app-resources-luojigou.luojigou.vip/FqDG4Kvlv9fdU4lGJmic2sTfEOq0";
 const isApp = !isWeixinBrowser();
 
+const { id } = useRoute().query;
+
 const props = defineProps<{
-  title: string;
+  title?: string;
   type?: number;
   courseInfo?: any;
-  info?: IGroupCourse;
+  info?: IGroupCourse | IGroupCommodity;
 }>();
 
 const topHeight = ref(44);
@@ -24,41 +26,46 @@ const topHeight = ref(44);
 const type = computed(() => props.type);
 const title = computed(() => props.title);
 const courseInfo = computed(() => props.courseInfo);
+const info = computed(() => props.info);
 
 // 分享
 function shareCommodity() {
-  const { activityPrice, population } = info.value.groupBuyActivity;
+  if (info.value && (info.value as IGroupCommodity).goods) {
+    const { activityPrice, population } = info.value.groupBuyActivity;
 
-  const { imageUrl, markingPrice } = info.value.goods;
+    const { imageUrl, markingPrice } = (info.value as IGroupCommodity).goods;
 
-  const { origin, pathname } = window.location;
+    const { origin, pathname } = window.location;
 
-  shareToFriendForReward({
-    teamLeader: 0, // 是否是团长 0-否 1-是
-    productImage: imageUrl, // 课程封面
-    activityPrice: activityPrice, // 拼团活动价
-    originalPrice: markingPrice, // 原价
-    population: population, // 成团人数
-    inviteCode: `${origin}${pathname}#/groupCommodity?id=${$route.query.id}`,
-  });
+    shareToFriendForReward({
+      teamLeader: 0, // 是否是团长 0-否 1-是
+      productImage: imageUrl, // 课程封面
+      activityPrice: activityPrice, // 拼团活动价
+      originalPrice: markingPrice, // 原价
+      population: population, // 成团人数
+      inviteCode: `${origin}${pathname}#/group/GroupCommodity?id=${id}`,
+    });
+  }
 }
 
 // 分享课程
 function shareCourse() {
-  const { markingPrice, imgCover } = info;
-  const { activityPrice, population } = info.groupBuyActivity;
-  const { origin, pathname } = window.location;
+  if (info.value) {
+    const { markingPrice, imgCover } = info.value as IGroupCourse;
+    const { activityPrice, population } = info.value.groupBuyActivity;
+    const { origin, pathname } = window.location;
 
-  shareToFriendForReward({
-    teamLeader: 0, // 是否是团长 0-否 1-是
-    productImage: imgCover, // 课程封面
-    activityPrice: activityPrice, // 拼团活动价
-    originalPrice: markingPrice, // 原价
-    population: population, // 成团人数
-    inviteCode: `${origin}${pathname}#/groupCourse?id=${$route.query.id}`,
-  });
+    shareToFriendForReward({
+      teamLeader: 0, // 是否是团长 0-否 1-是
+      productImage: imgCover, // 课程封面
+      activityPrice: activityPrice, // 拼团活动价
+      originalPrice: markingPrice, // 原价
+      population: population, // 成团人数
+      inviteCode: `${origin}${pathname}#/group/GroupCourse?id=${id}`,
+    });
+  }
 }
-function jumpPage(type) {
+function jumpPage(type: string) {
   console.log(type, "type");
   if (type === "returnPrev") {
     callAppFc("popPage");
@@ -67,7 +74,7 @@ function jumpPage(type) {
 
 onMounted(async () => {
   try {
-    window["topBarHeight"] = (data) => {
+    (window as any)["topBarHeight"] = (data: any) => {
       topHeight.value = data;
     };
     console.log(topHeight.value, "topBarHeight");

@@ -143,7 +143,7 @@ export function callAppFc(event: any, params = {}, error: null | Function = null
 /**
  * 请求 app token
  */
-export function getTestToken(phone = "15614410020", code = "5566", type = "c") {
+export function getTestToken(phone = "18043110072", code = "5566", type = "c") {
   return new Promise((resolve) => {
     if (type === "c") {
       getCUserToken(phone, code).then((res) => {
@@ -358,10 +358,23 @@ export function filterImgCover(imgsStr: string, mode = "img") {
   }
 }
 
-export function wxPayFc(record) {
+export function byWechatPay(ticket: any) {
+  callAppFc("byAliPay", {
+    callback: "returnPayResult",
+    ticket,
+  });
+}
+export function byAliPayFc(ticket: any) {
+  callAppFc("byAliPay", {
+    callback: "returnPayResult",
+    ticket,
+  });
+}
+
+export function wxPayFc(record: any) {
   return new Promise(async (resolve) => {
     // 调用微信JSAPI
-    function onBridgeReady(record) {
+    function onBridgeReady(record: any) {
       console.log("调用微信支付WeixinJSBridge：", record);
       return new Promise((resolve, reject) => {
         WeixinJSBridge.invoke(

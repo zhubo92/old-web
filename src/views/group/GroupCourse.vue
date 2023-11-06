@@ -478,7 +478,7 @@ onMounted(async () => {
         查看拼团详情
       </div>
 
-      <div v-else>
+      <div v-else class="course-buy">
         <div class="course-buy-alone" @click="jumpPage('buyAlone')">
           <div class="course-buy-alone-price">
             <span>￥</span>

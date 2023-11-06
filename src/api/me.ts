@@ -41,3 +41,13 @@ export function addMobileAddressRequest(data: IAddressForm) {
     },
   });
 }
+
+export function getMobileDefaultAddressRequest() {
+  return request({
+    url: `mall/mobile/address/default`,
+    method: "GET",
+    headers: {
+      platform: "H5",
+    },
+  });
+}

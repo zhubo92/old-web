@@ -79,3 +79,17 @@ export function placeOrderAtAppRequest(data: {
     data,
   });
 }
+
+export function deleteAICourseOrderRequest(id: string) {
+  return request({
+    url: `app/v1/aiCourse/order/unpaid/${id}`,
+    method: "DELETE",
+  });
+}
+
+export function deleteProductOrderRequest(id: string) {
+  return request({
+    url: `mall/mobile/unpaid/${id}`,
+    method: "DELETE",
+  });
+}
