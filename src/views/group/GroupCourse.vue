@@ -902,6 +902,6 @@ onMounted(async () => {
 }
 
 .description {
-  margin: -1em auto 0;
+  //margin: -1em auto 0;
 }
 </style>

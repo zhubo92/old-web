@@ -38,7 +38,7 @@ export function getCourseOrderWeChatPayRequest(data: { orderId: string }) {
 }
 
 export function getCourseOrderRequest(data: { courseSkuId: string; wxName: string }) {
-  return request({
+  return request<string>({
     url: `app/h5/course/order`,
     method: "POST",
     data,
@@ -91,5 +91,41 @@ export function deleteProductOrderRequest(id: string) {
   return request({
     url: `mall/mobile/unpaid/${id}`,
     method: "DELETE",
+  });
+}
+
+export function addPhoneToOrderRequest(orderId: string, phone: string) {
+  return request({
+    url: `app/app/gameCourse/note/${orderId}/${phone}`,
+    method: "GET",
+  });
+}
+
+export function wxBindPhoneRequest(phone: string, code: string, data: any) {
+  return request({
+    url: `app/h5/course/order/wxBandPhone/${phone}/${code}`,
+    method: "POST",
+    data,
+  });
+}
+
+export function verifyBindPhoneRequest() {
+  return request({
+    url: `app/h5/login/bindWx`,
+    method: "GET",
+  });
+}
+
+export function addOrderInAPPRequest(data: {
+  orderType: number;
+  courseSkuId: string;
+  payApi: string;
+  payChannels: number;
+  payMethod: number;
+}) {
+  return request<string>({
+    url: `app/v1/aiCourse/order`,
+    method: "POST",
+    data,
   });
 }

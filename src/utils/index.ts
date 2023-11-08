@@ -142,8 +142,10 @@ export function callAppFc(event: any, params = {}, error: null | Function = null
 
 /**
  * 请求 app token
+ *
+ * 18043110072 15614410020 16603861667 18210827464
  */
-export function getTestToken(phone = "18043110072", code = "5566", type = "c") {
+export function getTestToken(phone = "15614410020", code = "5566", type = "c") {
   return new Promise((resolve) => {
     if (type === "c") {
       getCUserToken(phone, code).then((res) => {
@@ -358,6 +360,27 @@ export function filterImgCover(imgsStr: string, mode = "img") {
   }
 }
 
+/**
+ * @description 页面到底操作
+ * @param callback{Function} 回调函数
+ * @author 朱波
+ * @date 2023/2/22
+ */
+export function pageFinallyFc(callback: Function) {
+  window.onscroll = () => {
+    // 滚动条滚动时，距离顶部的距离
+    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+    // 可视区的高度
+    const windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
+    // 滚动条的总高度
+    const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+    // 滚动条到底部的条件
+    if (scrollTop + windowHeight === scrollHeight && callback) {
+      callback();
+    }
+  };
+}
+
 export function byWechatPay(ticket: any) {
   callAppFc("byAliPay", {
     callback: "returnPayResult",
@@ -372,11 +395,11 @@ export function byAliPayFc(ticket: any) {
 }
 
 export function wxPayFc(record: any) {
-  return new Promise(async (resolve) => {
+  return new Promise((resolve) => {
     // 调用微信JSAPI
     function onBridgeReady(record: any) {
       console.log("调用微信支付WeixinJSBridge：", record);
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         WeixinJSBridge.invoke(
           "getBrandWCPayRequest",
           {
@@ -387,7 +410,7 @@ export function wxPayFc(record: any) {
             signType: record.signType, // 微信签名方式
             paySign: record.paySign, // 微信签名
           },
-          (res) => {
+          (res: { err_msg: string }) => {
             console.log("支付结果:", res.err_msg);
             if (res.err_msg === "get_brand_wcpay_request:ok") {
               // 使用以上方式判断前端返回,微信团队郑重提示：
@@ -411,13 +434,16 @@ export function wxPayFc(record: any) {
     if (typeof WeixinJSBridge === "undefined") {
       // 微信浏览器内置对象。参考微信官方文档
       if (document.addEventListener) {
-        document.addEventListener("WeixinJSBridgeReady", onBridgeReady(record), false);
-      } else if (document.attachEvent) {
-        document.attachEvent("WeixinJSBridgeReady", onBridgeReady(record));
-        document.attachEvent("onWeixinJSBridgeReady", onBridgeReady(record));
+        document.addEventListener(
+          "WeixinJSBridgeReady",
+          async () => {
+            await onBridgeReady(record);
+          },
+          false,
+        );
       }
     } else {
-      resolve(await onBridgeReady(record));
+      resolve(onBridgeReady(record));
     }
   });
 }

@@ -10,5 +10,3 @@ const { loading } = storeToRefs(useAppStore());
   <MyLoading v-if="loading" />
   <RouterView />
 </template>
-
-<style lang="scss" scoped></style>

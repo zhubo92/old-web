@@ -16,6 +16,26 @@ export interface IShoppingAddress {
   default: boolean;
 }
 
+export function defaultShoppingAddress(): IShoppingAddress {
+  return {
+    id: "",
+    name: "",
+    phone: "",
+    detail: "",
+    openId: null,
+    unionId: null,
+    userId: "",
+    province: "",
+    city: "",
+    county: "",
+    address: "",
+    nickName: null,
+    areaCode: "",
+    tag: null,
+    default: false,
+  };
+}
+
 export interface IAddressForm {
   name: string;
   phone: string;

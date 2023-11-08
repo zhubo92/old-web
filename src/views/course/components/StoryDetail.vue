@@ -4,7 +4,7 @@ import type { ICourseDetail } from "@/types/course";
 import { defaultCourseDetail } from "@/types/course";
 import { showToast } from "vant";
 import { buried } from "@/utils";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 const listOpen = "https://app-resources-luojigou.luojigou.vip/Fplo_QxlOwllT2rywvZ1dyESXDsm";
 const listClose = "https://app-resources-luojigou.luojigou.vip/Fh6_khVE5ejOLMnft-zJvnVyt0l2";
@@ -14,6 +14,7 @@ const player = "https://app-resources-luojigou.luojigou.vip/Fru7m_laXGG254zkCHWK
 const timer = "https://app-resources-luojigou.luojigou.vip/Fo88fyhKp7_y3rEhXCEzeyIx6ptv";
 
 const route = useRoute();
+const router = useRouter();
 
 const props = withDefaults(
   defineProps<{
@@ -67,12 +68,12 @@ function handleTry(record: any) {
       "audio",
       JSON.stringify({
         name: record.name,
-        title: this.title,
+        title: title.value,
         url: record.audio.audioUrl,
         imgCover: record.imgCover,
       }),
     );
-    this.$router.push("/tryPlay");
+    router.push("/tryPlay");
   }
 }
 function toggleOpen(val: any) {

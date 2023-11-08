@@ -31,7 +31,7 @@ async function checkUserBuyCourse() {
     if (data) {
       await router.push(`/course/CourseDetail?id=${data}&mode=luojigou`);
     } else {
-      await router.push(`/ARGame`);
+      await router.push(`/activity/GameCourse`);
     }
   }
 }

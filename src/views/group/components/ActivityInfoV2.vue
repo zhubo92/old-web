@@ -8,7 +8,7 @@ const props = withDefaults(defineProps<{ info: IGroupCommodity }>(), {
 });
 
 const courseInfoBGI = "https://app-resources-luojigou.luojigou.vip/Fvm-qETgPpi0JOHnzkwdIIG1Cjkh";
-const timer = ref<NodeJS.Timeout>(null);
+const timer = ref<NodeJS.Timeout | null>(null);
 const days = ref("0");
 const hours = ref("0");
 const minutes = ref("0");
@@ -19,7 +19,7 @@ const info = computed(() => props.info);
 
 function clearTimer() {
   if (timer.value) {
-    clearInterval(timer.value);
+    clearTimeout(timer.value);
     timer.value = null;
   }
 }

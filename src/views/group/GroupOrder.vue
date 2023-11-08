@@ -24,7 +24,9 @@ import type { ICoupon, IGroupOrder, IGroupOrderCoupon } from "@/types/group";
 import { defaultCoupon, defaultGroupOrder, defaultGroupOrderCoupon } from "@/types/group";
 import TopNav from "@/views/group/components/TopNav.vue";
 import CTabs from "@/views/group/components/CTabs.vue";
-import CouponComponent from "@/views/group/CouponComponent.vue";
+import CouponComponent from "@/views/group/components/CouponComponent.vue";
+import type { IShoppingAddress } from "@/types/me";
+import { defaultShoppingAddress } from "@/types/me";
 
 const stepList = [
   {
@@ -92,19 +94,11 @@ const payType = ref(0); // 支付方式 0-微信 2-支付宝 3-魔法币
 const info = reactive<IGroupOrder>(defaultGroupOrder()); // 下单商品详情
 const platform = ref("H5"); // 下单平台: APP H5
 const system = ref("H5"); // 支付环境 H5 ANDROID IOS
-const address = reactive({});
+const address = reactive<IShoppingAddress>(defaultShoppingAddress());
 const orderId = ref("");
 const couponDialog = ref(false); // 优惠券弹出框
 
 const showCouponState = ref(1); // 1 可用 0 不可用
-const deducePrice = reactive({
-  // 活动价格之后
-  couponDiscountPrice: null,
-  coupons: null,
-  discountPrice: null,
-  discountedPrice: null,
-  totalPrice: 0,
-});
 const coupons = reactive<IGroupOrderCoupon>(defaultGroupOrderCoupon());
 const curCoupon = reactive<ICoupon>(defaultCoupon());
 const payLoading = ref(false); // 支付loading
@@ -141,13 +135,13 @@ async function calcCouponOne() {
   const $params = {
     activity: {
       activityId: info.activityId,
-      activityType: isGroup,
+      activityType: typeof isGroup === "string" ? isGroup : "0",
       value: 0,
     },
     couponId: curCoupon.id,
     orderGoodsInfoVOS: [
       {
-        amount: info.productType === 1 ? 1 : count,
+        amount: info.productType === 1 ? 1 : typeof count === "string" ? Number(count) : 1,
         id: info.skuId,
         type: 0,
       },
@@ -157,7 +151,7 @@ async function calcCouponOne() {
   const { data, status } = await calcCouponOneRequest($params);
   console.log(data);
   if (status == 200) {
-    coupons.deducePrice = data;
+    curCoupon.discountedPrice = data;
   }
   couponDialog.value = false;
 }
@@ -174,6 +168,8 @@ function selectCoupon(record: any) {
 function openCouponDialog() {
   if (coupons.usable.length == 0) return;
   couponDialog.value = true;
+
+  console.log("openCouponDialog", coupons.usable.length, couponDialog.value);
 }
 
 // 计算订单价格
@@ -313,7 +309,9 @@ async function jumpPage(type: string, params = {}) {
 // 判断浏览器环境
 function judgePlatform() {
   const ua = window.navigator.userAgent.toLowerCase();
-  if (ua.match(/MicroMessenger/i) == "micromessenger") {
+  const isWeixin = ua.match(/MicroMessenger/i)?.[0]?.toLowerCase() === "micromessenger";
+
+  if (isWeixin) {
     //微信浏览器
     system.value = "H5";
     platform.value = "H5";
@@ -418,7 +416,8 @@ async function getGroupBuySkuDetail(params: { activity: string; sku: string }) {
     Object.assign(info, data);
 
     if (info.productType === 2) {
-      const addressId = window.sessionStorage.getItem("addressId");
+      let addressId = window.sessionStorage.getItem("addressId");
+      console.log(addressId, "addressId");
 
       if (addressId) {
         await getMobileAddressById(addressId);
@@ -613,18 +612,18 @@ onMounted(async () => {
     </div>
 
     <!-- 优惠券弹出框 -->
-    <VantActionSheet title="" v-model="couponDialog">
+    <VantActionSheet title="" :show="couponDialog">
       <div class="coupon-dialog">
         <CTabs :tabs="tabsList" @change="changeCoupon" unactiveColor="#999" bgColor="#f9f9f9" />
 
         <div class="coupon-list" v-if="useCoupons.length !== 0">
           <CouponComponent
+            v-for="(item, index) in useCoupons"
+            :key="item.id"
             :itemData="item"
             :isSelect="curCoupon.id === item.id"
             :isRecommend="index == 0"
             :isUse="showCouponState === 1"
-            v-for="(item, index) in useCoupons"
-            :key="item.id"
             @select="selectCoupon"
           />
         </div>

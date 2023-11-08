@@ -18,10 +18,13 @@ import {
 } from "@/api/group";
 import { showToast } from "vant";
 import type { IGroupDetail } from "@/types/group";
-import { defaultGroupDetail } from "@/types/group";
+import { defaultGroupCommodity, defaultGroupDetail } from "@/types/group";
+import type { IGroupCommodity } from "@/types/group";
 import TopNav from "@/views/group/components/TopNav.vue";
 import InvitePoster from "@/views/group/components/InvitePoster.vue";
 import BuyModal from "@/views/group/components/BuyModal.vue";
+import PaySuccess from "@/views/group/components/PaySuccess.vue";
+import AddWechatBtn from "@/views/group/components/AddWechatBtn.vue";
 
 const yesLogo = "https://app-resources-luojigou.luojigou.vip/FrSm5fCdQ3ptEHluW1RNpLF79HRp";
 const rightBtn = "https://app-resources-luojigou.luojigou.vip/FgPA5a1BrBjJAdRFs6Kuoovv0mCI";
@@ -46,7 +49,7 @@ const posterShow = ref(false);
 const shareShow = ref(false);
 const buyShow = ref(false);
 const chosenSku = ref("");
-const info = reactive({});
+const info = reactive<IGroupCommodity>(defaultGroupCommodity());
 const buyModalRef = ref<HTMLElement | null>(null);
 
 function clearTimer() {
@@ -75,19 +78,13 @@ async function getMobileCommodityDetail(id: string) {
     Object.assign(info, data);
     console.log(info, "info");
 
-    if (buyModalRef.value) buyModalRef.value.chosenSkuId = info.skuInfo[0].id;
+    console.log(buyModalRef.value, "buyModalRef.value");
+
+    // if (buyModalRef.value) buyModalRef.value.chosenSkuId = info.skuInfo[0].id;
 
     chosenSku.value = info.skuInfo[0].sku;
   } else {
     showToast(msg);
-  }
-}
-async function getAICourseActivity(id: string) {
-  const { data, status } = await getAICourseActivityRequest(id);
-  if (status === 200) {
-    return data;
-  } else {
-    return null;
   }
 }
 function returnSku(val: string) {
@@ -110,11 +107,11 @@ async function jumpPage(type: string, data?: any) {
   if (type === "lookDetail") {
     // 查看详情
     if (isApp) {
-      const res = await getAICourseActivity(detail.product.skuId);
-      if (res && res.search("http") !== -1) {
+      const { data } = await getAICourseActivityRequest(detail.product.skuId);
+      console.log(data, "getAICourseActivityRequest");
+      if (data && data.search("http") !== -1) {
         // h5页面
-
-        const path = res.split("#")[1];
+        const path = data.split("#")[1];
         await router.push(path);
       } else {
         const path = productType === 2 ? `/goods/detail?id=` : "/course/pipeline?course_id=";
@@ -243,7 +240,7 @@ async function getGroupBuyGroupDetail(id: string) {
       await getMobileCommodityDetail(detail.product.spuId);
     }
 
-    console.log(detail, "detail");
+    console.log(JSON.parse(JSON.stringify(detail)), "detail");
   } else {
     showToast(msg);
   }
@@ -379,31 +376,7 @@ onUnmounted(() => {
           <div class="group-detail-container-look" @click="jumpPage('lookOrder')">查看订单详情</div>
         </div>
       </div>
-
-      <!--<template v-else-if="detail.state === 1">-->
-      <!--  <div-->
-      <!--    class="group-detail-container-invite"-->
-      <!--    @click="jumpPage('lookMyCourse')"-->
-      <!--  >-->
-      <!--    查看课程-->
-      <!--  </div>-->
-      <!--</template>-->
     </div>
-
-    <!--课程服务-->
-    <!--<div class="group-detail-serve">-->
-    <!--  <div class="group-detail-serve-title">课程服务</div>-->
-    <!--  <img-->
-    <!--    src="https://app-resources-luojigou.luojigou.vip/Fo3UxpYP1Pqpdj7HPeOIsXTiAaA1"-->
-    <!--    alt=""-->
-    <!--    class="group-detail-serve-qrcode"-->
-    <!--  />-->
-    <!--  <div class="group-detail-serve-text">助力孩子思维成长学习分享</div>-->
-    <!--  <div class="group-detail-serve-remark">-->
-    <!--    <img :src="Safety" alt=""/>-->
-    <!--    <span>已通过安全认证，可放心扫码</span>-->
-    <!--  </div>-->
-    <!--</div>-->
     <div class="group-detail-serve">
       <div class="group-detail-serve-name">获取更多福利</div>
       <AddWechatBtn />

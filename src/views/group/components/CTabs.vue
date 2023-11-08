@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
+import { getImageUrl } from "@/utils";
 
 const emit = defineEmits<{
   (e: "change", record: any): void;
@@ -48,11 +49,7 @@ active.value = tabs.value[0].value;
         <div class="label" :style="{ color: active == item.value ? activeColor : unactiveColor }">
           {{ item.name }}
         </div>
-        <img
-          v-show="item.value === active"
-          :src="require('@/assets/images/common/coupon-tabs-flag.png')"
-          alt=""
-        />
+        <img v-show="item.value === active" :src="getImageUrl('coupon-tabs-flag')" alt="" />
       </div>
       <div v-if="item.count">({{ item.count }})</div>
     </div>

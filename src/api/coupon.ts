@@ -7,8 +7,20 @@ export function getCouponRequest(data: any) {
   });
 }
 
-export function calcCouponOneRequest(data: any) {
-  return request({
+export function calcCouponOneRequest(data: {
+  activity: {
+    activityId: string;
+    activityType: string;
+    value: number;
+  };
+  couponId: string;
+  orderGoodsInfoVOS: {
+    amount: number;
+    id: string;
+    type: number;
+  }[];
+}) {
+  return request<number>({
     url: `/mall/mobile/coupon/deducePrice/one`,
     method: "POST",
     data,

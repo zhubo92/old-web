@@ -22,3 +22,6 @@ interface WechatConfigOptions {
   jsApiList: string[];
   openTagList: string[];
 }
+
+// 解决 WeixinJSBridge 在TS编译会报错的问题
+declare let WeixinJSBridge: any;

@@ -50,7 +50,7 @@ export function getMobileCommodityDetailRequest(spuId: string) {
 }
 
 export function getAICourseActivityRequest(skuId: string) {
-  return request({
+  return request<string>({
     url: `app/v1/AICourse/activity?skuId=${skuId}`,
     method: "GET",
   });

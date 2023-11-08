@@ -88,6 +88,10 @@ export interface IChapterItem {
   sectionIndex?: number;
   video: IChapterItemVideo;
   audio?: any;
+  getRecord?: {
+    lastTime: string;
+  };
+  watchComplete?: 0 | 1;
 }
 export interface IChapter {
   id: string;

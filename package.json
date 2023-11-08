@@ -15,6 +15,7 @@
     "axios": "^1.5.0",
     "dayjs": "^1.11.10",
     "html2canvas": "^1.4.1",
+    "moment": "^2.29.4",
     "pinia": "^2.1.6",
     "qrcodejs2-fix": "^0.0.1",
     "sass": "^1.68.0",

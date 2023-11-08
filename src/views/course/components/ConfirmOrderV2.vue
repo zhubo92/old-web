@@ -17,6 +17,7 @@ import {
 import { useRoute, useRouter } from "vue-router";
 import { getUserInfo } from "@/utils/storage";
 import { callAppFc, isWeixinBrowser, navAppPage, wxPayFc } from "@/utils";
+import type { IGroupCommodity } from "@/types/group";
 
 interface IPay {
   id: number;
@@ -51,7 +52,7 @@ const { id } = useRoute().query;
 
 const props = withDefaults(
   defineProps<{
-    info: ICourseDetail;
+    info: ICourseDetail | IGroupCommodity;
     show: boolean;
     payType: string;
     isPunch?: boolean;
@@ -80,7 +81,7 @@ const isPunch = computed(() => props.isPunch);
 
 // 魔法币是否足够
 const isEnough = computed(() => {
-  return !(myPayType.value === 3 && magicCoins.value < info.value.price);
+  return !(myPayType.value === 3 && magicCoins.value < (info.value as ICourseDetail).price);
 });
 
 // 支付方式 0-微信 2-支付宝 3-魔法币
@@ -116,8 +117,8 @@ async function getMagicCoinsPayOrder() {
   const userInfo = getUserInfo();
 
   const params = {
-    courseSkuId: info.value.id,
-    courseSpuId: info.value.aiCourseSpuId,
+    courseSkuId: (info.value as ICourseDetail).id,
+    courseSpuId: (info.value as ICourseDetail).aiCourseSpuId,
     wxName: userInfo?.nickname,
   };
   const { data, msg, status } = await getMagicCoinsPayOrderRequest(params);
@@ -141,7 +142,7 @@ async function getCoins() {
 // 更改支付方式
 function changePayType(item: IPay) {
   try {
-    if (item.id === 0 && magicCoins.value < info.value.price) {
+    if (item.id === 0 && magicCoins.value < (info.value as ICourseDetail).price) {
       showToast("魔法币不足");
       return;
     }
@@ -184,7 +185,7 @@ async function getCourseOrder() {
   if (status === 200) {
     orderId.value = String(data);
 
-    if (info.value.price !== 0) {
+    if ((info.value as ICourseDetail).price !== 0) {
       await getCourseOrderWeChatPay();
     } else {
       await router.push("/growTogether/pay/success");
@@ -272,7 +273,9 @@ async function placeOrderAtApp() {
     orderType: 1,
     payApi: "APP",
     platform: platform.value,
-    courseSkuId: info.value.id ? info.value.id : info.value?.skuId,
+    courseSkuId: (info.value as ICourseDetail).id
+      ? (info.value as ICourseDetail).id
+      : (info.value as IGroupCommodity).goods.imgList[0].spuId,
     payMethod: myPayType.value,
   };
   const { data, msg, status } = await placeOrderAtAppRequest(params);
@@ -280,7 +283,7 @@ async function placeOrderAtApp() {
     console.log(data, "placeOrderAtApp");
     orderId.value = data.id;
 
-    if (info.value.price === 0) {
+    if ((info.value as ICourseDetail).price === 0) {
       paySuccess();
       return;
     }
@@ -361,12 +364,13 @@ function goPay() {
       <VanIcon name="cross" class="close-btn" color="#D9D9D9" size="20px" @click="emit('close')" />
 
       <div class="info">
-        <img :src="info.imgCover" alt="" class="info-logo" />
+        <img :src="(info as ICourseDetail).imgCover" alt="" class="info-logo" />
         <div class="info-right">
-          <div class="info-right-title">{{ info.name }}</div>
-          <div v-if="info.price !== 0 && info.price">
+          <div class="info-right-title">{{ (info as ICourseDetail).name }}</div>
+          <div v-if="(info as ICourseDetail).price !== 0 && (info as ICourseDetail).price">
             <div class="info-right-price">
-              <span>￥</span>{{ info.price ? info.price.toFixed(2) : 0 }}
+              <span>￥</span
+              >{{ (info as ICourseDetail).price ? (info as ICourseDetail).price.toFixed(2) : 0 }}
             </div>
           </div>
           <div v-else class="info-right-price">免费</div>
@@ -375,7 +379,9 @@ function goPay() {
 
       <div class="total">
         <span class="total-text">合计</span>
-        <span class="total-price">{{ info.price ? info.price.toFixed(2) : 0 }}</span>
+        <span class="total-price">{{
+          (info as ICourseDetail).price ? (info as ICourseDetail).price.toFixed(2) : 0
+        }}</span>
       </div>
       <div class="remark" @click="changeType">
         <span>使用{{ payType }}点击更换支付方式</span>
@@ -387,7 +393,9 @@ function goPay() {
           <div class="go-pay-text-total">合计：</div>
           <div class="go-pay-text-price">
             <span>￥</span>
-            <span class="big">{{ info.price ? info.price.toFixed(2) : 0 }}</span>
+            <span class="big">{{
+              (info as ICourseDetail).price ? (info as ICourseDetail).price.toFixed(2) : 0
+            }}</span>
           </div>
         </div>
 

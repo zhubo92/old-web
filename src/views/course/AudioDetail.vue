@@ -406,7 +406,7 @@ onMounted(async () => {
   }
 
   .description {
-    margin: -1em auto;
+    //margin: -1em auto;
     background-color: #fff;
   }
 

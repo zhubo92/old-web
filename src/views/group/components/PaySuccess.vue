@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Overlay as VanOverlay } from "vant";
-import { defaultGroupDetail, IGroupDetail } from "@/types/group";
+import { defaultGroupDetail } from "@/types/group";
+import type { IGroupDetail } from "@/types/group";
 import { ref } from "vue";
 
 const bgi = "https://app-resources-luojigou.luojigou.vip/FoQ8qGT6A1pQj5r8CBvW4a8cq87G";

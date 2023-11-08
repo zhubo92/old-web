@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import dayjs from "dayjs";
+import type { ICoupon } from "@/types/group";
+import { defaultCoupon } from "@/types/group";
+import { getImageUrl } from "@/utils";
 
-const checked = require("@/assets/images/checked.png");
-const check = require("@/assets/images/growTogether/check.png");
+const checked = getImageUrl("checked");
+const check = getImageUrl("check");
 
 const emit = defineEmits<{
   (e: "select", record: any): void;
@@ -11,14 +14,14 @@ const emit = defineEmits<{
 
 const props = withDefaults(
   defineProps<{
-    itemData: any;
-    isUse?: number;
+    itemData: ICoupon;
+    isUse?: boolean;
     isSelect?: boolean;
     isRecommend?: boolean;
   }>(),
   {
-    itemData: () => {},
-    isUse: 1,
+    itemData: () => defaultCoupon(),
+    isUse: false,
     isSelect: false,
     isRecommend: false,
   },
@@ -70,7 +73,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  clearInterval(timeId.value);
+  if (timeId.value) clearInterval(timeId.value);
 });
 </script>
 
@@ -100,7 +103,7 @@ onUnmounted(() => {
           <div class="discount-price">可抵扣¥{{ itemData.discountPrice }}</div>
           <div :class="['term-of-validity', onDay ? 'downcount' : '']">{{ downcountText }}</div>
         </div>
-        <div class="coupon-active" v-if="isUse == 1">
+        <div class="coupon-active" v-if="isUse">
           <img :src="isSelect ? checked : check" alt="" />
         </div>
       </div>

@@ -13,7 +13,7 @@ export function getLuojigouCourseListRequest(params: IQueryParams) {
  * 用户是否购买过逻辑狗课程
  */
 export function checkUserBuyCourseRequest() {
-  return request({
+  return request<null | string>({
     url: `app/app/gameCourse/check/user`,
     method: "GET",
   });

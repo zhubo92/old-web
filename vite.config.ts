@@ -51,8 +51,8 @@ export default defineConfig({
     port: 6969,
     proxy: {
       "/zd-api": {
-        // target: 'https://open.api.luojigou.vip',
-        target: "https://open.test.luojigou.vip",
+        target: "https://open.api.luojigou.vip",
+        // target: "https://open.test.luojigou.vip",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/zd-api/, ""),
       },

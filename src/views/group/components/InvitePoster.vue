@@ -6,7 +6,8 @@ import type { IGroupDetail } from "@/types/group";
 import { defaultGroupDetail } from "@/types/group";
 import html2canvas from "html2canvas";
 import QRCode from "qrcodejs2-fix";
-import { IUserInfo } from "@/types/user";
+import { defaultUserInfo } from "@/types/user";
+import type { IUserInfo } from "@/types/user";
 
 const props = withDefaults(
   defineProps<{
@@ -25,10 +26,7 @@ const emit = defineEmits<{
 
 const posterUrl = ref("");
 const defaultBGI = "https://app-resources-luojigou.luojigou.vip/FjuNsfvBOqJoH46DbEaWem9cIx4M";
-const userInfo = ref<IUserInfo>({
-  headimgurl: "",
-  nickname: "",
-});
+const userInfo = ref<IUserInfo>(defaultUserInfo());
 const posterContUrl = ref("");
 const qrCodeRef = ref<HTMLElement | null>(null);
 
@@ -43,18 +41,14 @@ const info = computed(() => props.info);
 watch(show, () => {
   if (show.value) {
     posterContUrl.value = "";
-    try {
-      userInfo.value = getUserInfo();
-      if (!userInfo.value) {
-        userInfo.value = {
-          headimgurl: "",
-          nickname: "",
-        };
-      }
-      console.log(userInfo, "userInfo");
-    } catch (err) {
-      console.log(err, "userInfo");
+    const info = getUserInfo();
+    if (info) {
+      userInfo.value = info;
+    } else {
+      userInfo.value = defaultUserInfo();
     }
+
+    console.log(userInfo.value, "userInfo");
 
     creatQrCode();
   }
@@ -64,10 +58,12 @@ watch(show, () => {
 function handleSetQrCodeWidth() {
   const width = window.innerWidth;
   const eleWidth = `${(width * 65) / 375}px`;
-  qrCodeRef.value.style.width = eleWidth;
-  qrCodeRef.value.style.height = eleWidth;
-  qrCodeRef.value.childNodes[1].style.width = eleWidth;
-  qrCodeRef.value.childNodes[1].style.height = eleWidth;
+  if (qrCodeRef.value) {
+    qrCodeRef.value.style.width = eleWidth;
+    qrCodeRef.value.style.height = eleWidth;
+    (qrCodeRef.value.childNodes[1] as HTMLDivElement).style.width = eleWidth;
+    (qrCodeRef.value.childNodes[1] as HTMLDivElement).style.height = eleWidth;
+  }
 
   setTimeout(() => {
     makePosterCont();
@@ -77,35 +73,39 @@ function makePosterCont() {
   console.log("PosterCont转成base64");
   // 获取想要转换的 DOM 节点
   const dom = document.getElementById("poster");
-  html2canvas(dom, {
-    // dpi: 300,
-    // scale: 10,
-    // width: dom.offsetWidth,
-    // height: dom.offsetHeight,
-    backgroundColor: "#FF4F4F",
-    useCORS: true, // 开启跨域设置，需要后台设置cors
-  }).then((canvas) => {
-    // var context = canvas.getContext('2d');
-    // context.mozImageSmoothingEnabled = false;
-    // context.webkitImageSmoothingEnabled = false;
-    // context.msImageSmoothingEnabled = false;
-    // context.imageSmoothingEnabled = false;
-    // toDataURL函数生成img标签的可用数据  图片格式转成 base64
-    posterUrl.value = canvas.toDataURL("image/png", 1.0);
+  if (dom) {
+    html2canvas(dom, {
+      // dpi: 300,
+      // scale: 10,
+      // width: dom.offsetWidth,
+      // height: dom.offsetHeight,
+      backgroundColor: "#FF4F4F",
+      useCORS: true, // 开启跨域设置，需要后台设置cors
+    }).then((canvas) => {
+      // var context = canvas.getContext('2d');
+      // context.mozImageSmoothingEnabled = false;
+      // context.webkitImageSmoothingEnabled = false;
+      // context.msImageSmoothingEnabled = false;
+      // context.imageSmoothingEnabled = false;
+      // toDataURL函数生成img标签的可用数据  图片格式转成 base64
+      posterUrl.value = canvas.toDataURL("image/png", 1.0);
 
-    console.log(posterUrl, "posterContUrl");
-  });
+      console.log(posterUrl, "posterContUrl");
+    });
+  }
 }
 function creatQrCode() {
   console.log("开始生成code");
-  if (qrCodeRef.value) qrCodeRef.value.innerHTML = "";
-  new QRCode(qrCodeRef.value, {
-    text: qrCodePath.value, // 需要转换为二维码的内容
-    width: 200,
-    height: 200,
-    colorDark: "#000000",
-    colorLight: "#ffffff",
-  });
+  if (qrCodeRef.value) {
+    qrCodeRef.value.innerHTML = "";
+    new QRCode(qrCodeRef.value, {
+      text: qrCodePath.value, // 需要转换为二维码的内容
+      width: 200,
+      height: 200,
+      colorDark: "#000000",
+      colorLight: "#ffffff",
+    });
+  }
 
   handleSetQrCodeWidth();
 }
@@ -126,7 +126,7 @@ function creatQrCode() {
           <div v-if="userInfo.nickname" class="poster-user-name">{{ userInfo.nickname }}</div>
         </div>
 
-        <img :src="info.product.productImage" class="poster-cover" />
+        <img :src="info.product.productImage" class="poster-cover" alt="" />
 
         <div class="poster-remark">就差你了，拼团拿走超值商品</div>
         <div class="poster-price">

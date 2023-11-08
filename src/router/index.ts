@@ -5,12 +5,21 @@ const router = createRouter({
   routes: [
     {
       path: "/",
+      name: "Index",
       redirect: "/home/HomeNav",
     },
     {
       path: "/home/HomeNav",
       name: "HomeNav",
       component: () => import("@/views/home/HomeNav.vue"),
+      meta: {
+        title: "首页导航",
+      },
+    },
+    {
+      path: "/NotFound",
+      name: "NotFound",
+      component: () => import("@/views/NotFound.vue"),
       meta: {
         title: "首页导航",
       },
@@ -135,12 +144,48 @@ const router = createRouter({
         title: "课程详情",
       },
     },
+    {
+      path: "/punch/PunchActivity",
+      name: "PunchActivity",
+      component: () => import("@/views/punch/PunchActivity.vue"),
+      meta: {
+        title: "打卡活动",
+      },
+    },
+    {
+      path: "/punch/PunchCourse/:id",
+      name: "PunchCourse",
+      component: () => import("@/views/punch/PunchCourse.vue"),
+      meta: {
+        title: "打卡课程",
+      },
+    },
+    {
+      path: "/punch/PunchDetail/:id",
+      name: "PunchDetail",
+      component: () => import("@/views/punch/PunchDetail.vue"),
+      meta: {
+        title: "打卡详情",
+      },
+    },
+    {
+      path: "/activity/GameCourse",
+      name: "GameCourse",
+      component: () => import("@/views/activity/GameCourse.vue"),
+      meta: {
+        title: "逻辑狗0基础思维成长训练营",
+      },
+    },
   ],
 });
 
 router.beforeEach((to) => {
   // 网页标题
   document.title = (to.meta?.title || "") as string;
+  // 404 页面
+  if (!router.getRoutes().find((route) => route.name === to.name)) {
+    return "/NotFound";
+  }
 
   // 返回 false 以取消导航
   return true;

@@ -14,7 +14,7 @@ const phone = ref<undefined | string>(undefined);
 const code = ref<undefined | string>(undefined);
 const smsTime = ref(60);
 const codeDisabled = ref(false);
-const timer = ref<ReturnType<typeof setInterval> | null>(null);
+const timer = ref<NodeJS.Timeout | null>(null);
 const codeMsg = ref("获取验证码");
 
 function getCodeStr() {
@@ -74,8 +74,10 @@ watch(show, (val) => {
 });
 
 onUnmounted(() => {
-  if (timer.value) clearTimeout(timer.value);
-  timer.value = null;
+  if (timer.value) {
+    clearInterval(timer.value);
+    timer.value = null;
+  }
 });
 </script>
 
