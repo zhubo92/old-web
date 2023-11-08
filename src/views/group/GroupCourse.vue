@@ -286,7 +286,7 @@ async function getMobileCourseDetail(id: string) {
           if (info.mediaType === 1) {
             // 音频课
             await router.replace({
-              path: "/course/AudioCourse",
+              path: "/course/AudioDetail",
               query: {
                 id,
               },

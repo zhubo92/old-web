@@ -29,7 +29,7 @@ const activityList = [
   {
     id: 3,
     img: "https://img.luojigou.vip/FoLs_LTEfEIH2aYY1qFDgDYrg9Rh",
-    path: "/punch",
+    path: "/punch/PunchActivity",
   },
 ];
 

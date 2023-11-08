@@ -62,7 +62,7 @@ const isLuojigouCourse = computed(() => {
     const state =
       (mode && mode === "luojigou") ||
       luojigouCourseSkuIdList.findIndex((item) => item === id) !== -1;
-    console.log(state, "isLuojigouCourse");
+    // console.log(state, "isLuojigouCourse");
     return state;
   } catch (err) {
     console.error(err);
@@ -153,19 +153,18 @@ function changeImg() {
   // console.log("contents===", contents);
   info.value.description = contents;
 
-  nextTick();
-
   setTimeout(() => {
+    console.log(swiperHeight.value, "swiperHeight");
     let description = 1000;
     if (descriptionRef.value) description = descriptionRef.value.offsetHeight;
     let directory = 1000;
     if (directoryRef.value) directory = directoryRef.value.offsetHeight;
 
-    console.log(description, directory, "comment");
+    console.log(description, directory, "comment1");
     const list = [description, directory];
 
     swiperHeight.value = list[tabId.value];
-    console.log(swiperHeight, "swiperHeight");
+    console.log(swiperHeight.value, "swiperHeight1");
   }, 1500);
 }
 
@@ -205,12 +204,12 @@ onMounted(async () => {
 
   const tab = document.querySelector("#tab");
   window.addEventListener("scroll", () => {
-    // console.log(tab.getBoundingClientRect().top);
     if (tab) tabFixTop.value = tab.getBoundingClientRect().top < 0;
-    // console.log(this.tabFixTop);
   });
 
   backTop();
+
+  loading.value = false;
 });
 </script>
 

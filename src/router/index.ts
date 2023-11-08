@@ -141,7 +141,15 @@ const router = createRouter({
       name: "AudioDetail",
       component: () => import("@/views/course/AudioDetail.vue"),
       meta: {
-        title: "课程详情",
+        title: "音频课程详情",
+      },
+    },
+    {
+      path: "/course/TryListen",
+      name: "TryListen",
+      component: () => import("@/views/course/TryListen.vue"),
+      meta: {
+        title: "音频课程试听",
       },
     },
     {
@@ -184,6 +192,7 @@ router.beforeEach((to) => {
   document.title = (to.meta?.title || "") as string;
   // 404 页面
   if (!router.getRoutes().find((route) => route.name === to.name)) {
+    console.log(to, "to");
     return "/NotFound";
   }
 

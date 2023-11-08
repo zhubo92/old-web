@@ -33,13 +33,17 @@ export async function convertToImage(element: HTMLElement) {
  * 友盟埋点
  */
 export function buried(event: string, params = {}) {
-  console.log(event, params, "友盟埋点");
-  const { aplus_queue } = window as any;
-  if (aplus_queue) {
-    aplus_queue.push({
-      action: "aplus.record",
-      arguments: [event, "CLK", params],
-    });
+  try {
+    console.log(event, params, "友盟埋点");
+    const { aplus_queue } = window as any;
+    if (aplus_queue) {
+      aplus_queue.push({
+        action: "aplus.record",
+        arguments: [event, "CLK", params],
+      });
+    }
+  } catch (err) {
+    console.log(err, "友盟埋点错误");
   }
 }
 
@@ -177,8 +181,8 @@ export async function verifyToken() {
   const res = await verifyTokenRequest();
   if (res.status === HttpCodeEnum.UNAUTHORIZED) {
     clearData();
-    return res;
   }
+  return res;
 }
 
 export function getQueryString(name: string) {
@@ -201,12 +205,7 @@ export function getWXCode(appid = "wxe87236d542cd0f94") {
 }
 
 export function weixinLogin(authData: any): Promise<{ status: number }> {
-  // 登录埋点
-  const { aplus_queue } = window as any;
-  aplus_queue.push({
-    action: "aplus.record",
-    arguments: ["weixinLogin", "CLK", authData],
-  });
+  buried("weixinLogin", authData);
 
   return new Promise((resolve) => {
     weixinLoginRequest(authData).then((res) => {
@@ -244,7 +243,7 @@ export async function getToken() {
           const code = getQueryString("code");
           if (code) {
             weixinLogin({ code }).then((res) => {
-              if (res?.status === 200) resolve(true);
+              if (res?.status === HttpCodeEnum.OK) resolve(true);
 
               const { origin, pathname, hash } = window.location;
               location.replace(`${origin}${pathname}${hash}`);
@@ -281,9 +280,9 @@ export async function registerWxOpenLaunchApp(
     request().then((res) => {
       const { data, status } = res;
       if (status === HttpCodeEnum.OK) {
-        const { debug, signature, appId, nonceStr, timestamp } = data;
+        const { signature, appId, nonceStr, timestamp } = data;
         wx.config({
-          debug,
+          debug: false,
           appId,
           timestamp,
           nonceStr,
@@ -294,12 +293,10 @@ export async function registerWxOpenLaunchApp(
           openTagList,
         });
         wx.error(() => {
-          console.log("error");
           resolve(true);
         });
 
         wx.ready(() => {
-          console.log("ready");
           resolve(true);
           callback?.();
         });

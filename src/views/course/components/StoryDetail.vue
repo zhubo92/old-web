@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
-import type { ICourseDetail } from "@/types/course";
+import type { IChapter, ICourseDetail } from "@/types/course";
 import { defaultCourseDetail } from "@/types/course";
 import { showToast } from "vant";
 import { buried } from "@/utils";
@@ -18,7 +18,7 @@ const router = useRouter();
 
 const props = withDefaults(
   defineProps<{
-    storyList: any[];
+    storyList: IChapter[];
     title: string;
     info: ICourseDetail;
   }>(),
@@ -36,9 +36,9 @@ const title = computed(() => props.title);
 const info = computed(() => props.info);
 
 watch(
-  () => storyList,
-  (val) => {
-    listData.value = val.value;
+  () => storyList.value.length,
+  () => {
+    listData.value = storyList.value;
     listData.value.forEach((item) => {
       item.isOpen = true;
     });
@@ -73,7 +73,7 @@ function handleTry(record: any) {
         imgCover: record.imgCover,
       }),
     );
-    router.push("/tryPlay");
+    router.push("/course/TryListen");
   }
 }
 function toggleOpen(val: any) {
@@ -133,4 +133,191 @@ function toggleOpen(val: any) {
   </div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.story {
+  padding-top: 10px;
+  //padding-bottom: 200px;
+  background-color: #fff;
+  overflow: hidden;
+
+  &-List {
+    margin: 0 auto 8px;
+    width: 343px;
+    background: rgba(246, 246, 246, 0.4);
+    border-radius: 0px 0px 10px 10px;
+
+    &-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      width: 343px;
+      height: 65px;
+      background: #ffffff;
+      box-shadow: 0px 1px 4px 0px rgba(181, 194, 201, 0.26);
+      border-radius: 10px;
+
+      &-title {
+        margin-left: 18px;
+        width: 260px;
+        height: 20px;
+        font-size: 14px;
+        font-family:
+          PingFangSC-Medium,
+          PingFang SC;
+        font-weight: 550;
+        color: #333333;
+        line-height: 20px;
+        overflow: hidden;
+        /*文本不会换行*/
+        white-space: nowrap;
+        /*当文本溢出包含元素时，以省略号表示超出的文本*/
+        text-overflow: ellipsis;
+      }
+
+      .listOpen {
+        margin-right: 20px;
+        display: block;
+        width: 16px;
+        height: 9px;
+        object-fit: cover;
+      }
+
+      .listClose {
+        margin-right: 20px;
+        display: block;
+        width: 9px;
+        height: 16px;
+        object-fit: cover;
+      }
+    }
+
+    .story-item {
+      display: flex;
+      align-items: center;
+      position: relative;
+      margin-left: 12px;
+      margin-bottom: 10px;
+
+      &-img {
+        margin-right: 17px;
+        position: relative;
+        width: 98px;
+        height: 80px;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center center;
+        border-radius: 10px;
+        overflow: hidden;
+
+        &-shadow {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .unlocked {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          z-index: 3;
+          display: block;
+          width: 23px;
+          height: 29px;
+          object-fit: cover;
+          transform: translate(-50%, -50%);
+        }
+      }
+
+      &-info {
+        padding-top: 4px;
+        height: 80px;
+        border-bottom: 1px solid #f6f6f6;
+        box-sizing: border-box;
+
+        &-top {
+          display: flex;
+          align-items: center;
+          margin-bottom: 16px;
+
+          &-title {
+            margin-right: 5px;
+            max-width: 150px;
+            height: 22px;
+            font-size: 16px;
+            font-family:
+              PingFangSC-Medium,
+              PingFang SC;
+            font-weight: 550;
+            color: #333333;
+            line-height: 22px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+
+          &-try {
+            width: 39px;
+            height: 18px;
+            font-size: 11px;
+            font-family:
+              PingFangSC-Medium,
+              PingFang SC;
+            font-weight: 500;
+            color: #ffffff;
+            background: linear-gradient(279deg, #ff9055 0%, #ffb856 100%);
+            border-radius: 9px;
+          }
+        }
+
+        &-bottom {
+          display: flex;
+          align-items: center;
+
+          &-player {
+            display: flex;
+            align-items: center;
+
+            img {
+              margin-right: 2px;
+              display: block;
+              width: 13px;
+              height: 13px;
+              object-fit: cover;
+            }
+
+            span {
+              height: 17px;
+              font-size: 12px;
+              font-family:
+                PingFangSC-Regular,
+                PingFang SC;
+              font-weight: 400;
+              color: #bdbdbd;
+              line-height: 17px;
+            }
+          }
+
+          .story-item-info-bottom-player + .story-item-info-bottom-player {
+            margin-left: 14px;
+          }
+        }
+      }
+
+      &-open {
+        position: absolute;
+        right: 13px;
+        top: 50%;
+        transform: translateY(-50%);
+        display: block;
+        width: 7px;
+        height: 11px;
+        object-fit: cover;
+      }
+    }
+  }
+}
+</style>
