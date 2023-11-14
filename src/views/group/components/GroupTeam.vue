@@ -3,6 +3,10 @@ import { Swipe as VanSwipe, SwipeItem as VanSwipeItem } from "vant";
 import { computed, nextTick, onMounted, onUnmounted, ref } from "vue";
 import type { IGroupTeam } from "@/types/group";
 
+const emit = defineEmits<{
+  (e: "jumpPage", val: string, id: string): void;
+}>();
+
 const props = withDefaults(
   defineProps<{
     group: IGroupTeam[];
@@ -11,7 +15,6 @@ const props = withDefaults(
     group: () => [],
   },
 );
-const group = computed(() => props.group);
 
 const timeArr = ref<
   {
@@ -24,6 +27,7 @@ const timeArr = ref<
 const swipeHeight = ref(56);
 const itemRef = ref<HTMLElement[] | null>(null);
 
+const group = computed(() => props.group);
 const listLength = computed(() => {
   try {
     return Math.ceil(group.value.length / 2);
@@ -129,7 +133,7 @@ onUnmounted(() => {});
               </div>
               <div
                 class="group-team-item-right-btn"
-                @click="$emit('jumpPage', item.isMe ? 'goInvite' : 'makeUpOrder', item.id)"
+                @click="emit('jumpPage', item.isMe ? 'goInvite' : 'makeUpOrder', item.id)"
               >
                 {{ item.isMe ? "去邀请" : "去凑单" }}
               </div>
@@ -169,7 +173,7 @@ onUnmounted(() => {});
               <div
                 class="group-team-item-right-btn"
                 @click="
-                  $emit(
+                  emit(
                     'jumpPage',
                     group[(num - 1) * 2].isMe ? 'goInvite' : 'makeUpOrder',
                     group[(num - 1) * 2].id,
@@ -206,7 +210,7 @@ onUnmounted(() => {});
               <div
                 class="group-team-item-right-btn"
                 @click="
-                  $emit(
+                  emit(
                     'jumpPage',
                     group[num * 2 - 1].isMe ? 'goInvite' : 'makeUpOrder',
                     group[num * 2 - 1].id,

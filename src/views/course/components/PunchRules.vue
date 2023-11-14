@@ -2,6 +2,10 @@
 import { Overlay as VanOverlay } from "vant";
 import { computed } from "vue";
 
+const emit = defineEmits<{
+  (e: "close"): void;
+}>();
+
 const props = withDefaults(
   defineProps<{
     show: boolean;
@@ -31,7 +35,7 @@ const textArr = computed(() => {
 </script>
 
 <template>
-  <VanOverlay :show="show" :z-index="20" :lock-scroll="false" @click="$emit('close')">
+  <VanOverlay :show="show" :z-index="20" :lock-scroll="false" @click="emit('close')">
     <div class="rules" @click.stop>
       <div class="rules-container">
         <img :src="bgi" alt="" class="rules-container-bgi" />
@@ -41,10 +45,10 @@ const textArr = computed(() => {
           </div>
         </div>
         <div class="rules-container-bottom fc">
-          <div class="rules-container-bottom-btn fc" @click="$emit('close')">我知道了</div>
+          <div class="rules-container-bottom-btn fc" @click="emit('close')">我知道了</div>
         </div>
       </div>
-      <img :src="closeBtn" alt="" class="rules-close" @click="$emit('close')" />
+      <img :src="closeBtn" alt="" class="rules-close" @click="emit('close')" />
     </div>
   </VanOverlay>
 </template>

@@ -43,7 +43,6 @@ const num = computed(() => props.num);
         >
           <div class="tabItem-container">
             <div class="title">{{ item.title }}{{ num && item.id === 1 ? `(${num})` : "" }}</div>
-            <!--<img :src="greenBar" class="greenBar" alt=""/>-->
             <div class="bar"></div>
           </div>
 

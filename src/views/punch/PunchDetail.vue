@@ -2,12 +2,17 @@
 import { onMounted, reactive, ref } from "vue";
 import { callAppFc, getToken } from "@/utils";
 import { useRoute, useRouter } from "vue-router";
-import { getPunchDetailRequest, getPunchRecordRequest } from "@/api/punch";
+import {
+  checkinUserNotifyRequest,
+  getPunchDetailRequest,
+  getPunchRecordRequest,
+  getPunchUserDetailRequest,
+} from "@/api/punch";
 import { showToast } from "vant";
 import HeaderComponent from "@/views/punch/components/HeaderComponent.vue";
 import ProgressBar from "@/views/punch/components/ProgressBar.vue";
-import type { IPunchDetail, IPunchRecord } from "@/types/punch";
-import { defaultPunchDetail } from "@/types/punch";
+import type { IPunchDetail, IPunchRecord, IPunchCourse } from "@/types/punch";
+import { defaultPunchCourse, defaultPunchDetail } from "@/types/punch";
 import type { IQueryParams } from "@/types/http-codes";
 import CalendarComponent from "@/views/punch/components/CalendarComponent.vue";
 import PunchRecord from "@/views/punch/components/PunchRecord.vue";
@@ -16,6 +21,7 @@ const router = useRouter();
 const route = useRoute();
 const { id } = route.params;
 
+const info = reactive<IPunchCourse>(defaultPunchCourse());
 const detail = reactive<IPunchDetail>(defaultPunchDetail());
 const recordList = ref<IPunchRecord[]>([]);
 const queryParams = reactive<IQueryParams & { activityId: string }>({
@@ -24,6 +30,29 @@ const queryParams = reactive<IQueryParams & { activityId: string }>({
   page: 1,
   pageSize: 100,
 });
+
+async function getPunchUserDetail() {
+  if (typeof id !== "string") return;
+  const { data, msg, status } = await getPunchUserDetailRequest({ activityId: id });
+  if (status === 200) {
+    console.log(data, "getPunchUserDetail");
+    Object.assign(info, data, {
+      chapterList: data.chapterList.map((chapter) => {
+        return {
+          ...chapter,
+          itemList: chapter.itemList.map((item, index) => {
+            return {
+              ...item,
+              index,
+            };
+          }),
+        };
+      }),
+    });
+  } else {
+    msg && showToast(msg);
+  }
+}
 
 async function getPunchRecord() {
   const { data, msg, status } = await getPunchRecordRequest(queryParams);
@@ -43,11 +72,27 @@ async function getPunchDetail(activityId: string) {
     msg && showToast(msg);
   }
 }
+
+async function checkinUserNotify() {
+  const { data, msg, status } = await checkinUserNotifyRequest({
+    id: info.id,
+    state: info.isDailyRemind === 1 ? 0 : 1,
+  });
+  if (status === 200) {
+    info.isDailyRemind = data;
+    showToast(info.isDailyRemind === 1 ? "已开启" : "已关闭");
+  } else {
+    msg && showToast(msg);
+  }
+}
+
 function jumpPage(val: string) {
   if (val === "returnPrev") {
     callAppFc("popPage", "", () => {
       router.go(-1);
     });
+  } else if (val === "checkinUserNotify") {
+    checkinUserNotify();
   } else if (val === "goPunch") {
     // 去打卡
 
@@ -70,6 +115,7 @@ onMounted(async () => {
   if (typeof id === "string") {
     queryParams.activityId = id;
     await getPunchDetail(id);
+    await getPunchUserDetail();
   }
   await getPunchRecord();
 });
@@ -77,7 +123,7 @@ onMounted(async () => {
 
 <template>
   <div class="pd">
-    <HeaderComponent @jumpPage="jumpPage" />
+    <HeaderComponent :info="info" @jumpPage="jumpPage" />
 
     <div class="pd-top">
       <!--右上角背景-->

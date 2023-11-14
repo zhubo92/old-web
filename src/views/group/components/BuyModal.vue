@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Overlay as VanOverlay, showToast, Stepper as VanStepper } from "vant";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { defaultGroupCommodity } from "@/types/group";
 import type { IGroupCommodity } from "@/types/group";
@@ -10,6 +10,7 @@ const { path, id } = useRoute().query;
 
 const emit = defineEmits<{
   (e: "close"): void;
+  (e: "returnSku", sku: string): void;
 }>();
 
 const props = withDefaults(
@@ -32,12 +33,24 @@ const show = computed(() => props.show);
 const inventory = computed(() => {
   try {
     const item = info.value.skuInfo.filter((item: any) => item.id === chosenSkuId.value)[0];
-    return item.count;
+    console.log(item, "item1");
+    return item.inventory;
   } catch (err) {
     console.log(err, "inventory");
   }
 
   return "";
+});
+
+const activityPrice = computed(() => {
+  console.log(chosenSkuId.value, "chosenSkuId");
+  const item = info.value.skuInfo.filter((item) => item.id === chosenSkuId.value);
+  console.log(item, "item2");
+  return item[0].activityPrice.toFixed(2);
+});
+
+const price = computed(() => {
+  return info.value.skuInfo.filter((item) => item.id === chosenSkuId.value)[0].price.toFixed(2);
 });
 
 function goBuy() {
@@ -70,10 +83,35 @@ function goBuy() {
     query: params,
   });
 }
+
+function changeSku(item: {
+  id: string;
+  shortId: number;
+  productId: string;
+  sku: string;
+  level: null;
+  price: number;
+  count: number;
+  produceCode: string;
+  goods: null;
+  activityPrice: number;
+  inventory: number;
+}) {
+  chosenSkuId.value = item.id;
+  console.log(chosenSkuId.value, "chosenSkuId");
+  emit("returnSku", item.sku);
+}
+
+watch(
+  () => info.value.skuInfo,
+  () => {
+    changeSku(info.value.skuInfo[0]);
+  },
+);
 </script>
 
 <template>
-  <VanOverlay :show="show" z-index="20" @click="$emit('close')">
+  <VanOverlay :show="show" z-index="20" @click="emit('close')">
     <div v-if="info.goods" class="buy-modal" @click.stop>
       <div class="buy-modal-info">
         <img :src="info.goods.imageUrl" alt="" class="buy-modal-info-cover" />
@@ -81,18 +119,16 @@ function goBuy() {
           <div class="buy-modal-info-right-title">
             {{ info.goods.title }}
           </div>
-          <!--          <div class="buy-modal-info-right-desc">幼儿园男孩女孩益智早…</div>-->
 
           <div v-if="info.groupBuyActivity" class="buy-modal-info-right-price">
-            <span>¥{{ info.groupBuyActivity.activityPrice.toFixed(2) }}</span>
-            <del>¥{{ info.goods.price.toFixed(2) }}</del>
+            <span>¥{{ activityPrice }}</span>
+            <del>¥{{ price }}</del>
             <div class="buy-modal-info-right-price-label">
               {{ info.groupBuyActivity.population }}人拼团价
             </div>
           </div>
           <div class="buy-modal-info-right-remark">
             <span>库存{{ inventory }}件</span>
-            <!--<span>思维语言</span>-->
           </div>
         </div>
       </div>
@@ -104,7 +140,7 @@ function goBuy() {
             v-for="item in info.skuInfo"
             :key="item.id"
             :class="['buy-modal-shape-item', chosenSkuId === item.id ? 'chosen' : '']"
-            @click="chosenSkuId = item.id"
+            @click="changeSku(item)"
           >
             {{ item.sku }}
           </div>

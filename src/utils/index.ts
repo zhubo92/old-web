@@ -224,7 +224,7 @@ export function weixinLogin(authData: any): Promise<{ status: number }> {
 /**
  * 获取token
  */
-export async function getToken() {
+export function getToken() {
   return new Promise((resolve) => {
     if (process.env.NODE_ENV === "development") {
       resolve(getTestToken());
@@ -253,13 +253,15 @@ export async function getToken() {
           }
         }
       } else {
-        callAppFc("getToken");
         (window as any).returnToken = (token: string) => {
           if (token) {
+            console.log(token, "app:token");
             setSToken(token);
             resolve(token);
           }
         };
+
+        callAppFc("getToken", "");
       }
     }
   });
@@ -274,7 +276,7 @@ export async function registerWxOpenLaunchApp(
   jsApiList = ["updateAppMessageShareData", "getLocation", "closeWindow"],
   openTagList = ["wx-open-launch-app"],
 ) {
-  if (process.env.NODE_ENV === "development") return Promise.resolve(true);
+  if (process.env.NODE_ENV === "development" || !isWeixinBrowser()) return Promise.resolve(true);
 
   return new Promise((resolve) => {
     request().then((res) => {
@@ -292,6 +294,7 @@ export async function registerWxOpenLaunchApp(
           // 可选，需要使用的开放标签列表，例如['wx-open-launch-app']
           openTagList,
         });
+
         wx.error(() => {
           resolve(true);
         });
@@ -300,6 +303,8 @@ export async function registerWxOpenLaunchApp(
           resolve(true);
           callback?.();
         });
+      } else {
+        resolve(true);
       }
     });
   });

@@ -361,14 +361,12 @@ onMounted(async () => {
 
       <div class="course-detail-info-content">
         <div class="course-detail-info-content-title">
-          <!--<div class="course-detail-info-content-title-label">618</div>-->
           {{ info.name }}
         </div>
         <div class="course-detail-info-content-desc">{{ info.simpleDescription }}</div>
       </div>
       <div class="course-detail-info-footer">
         <div v-if="info.suitAge" class="course-detail-info-footer-age">{{ info.suitAge }}岁</div>
-        <!--<div class="course-detail-info-footer-people">{{ info.paidCount }}人购买</div>-->
         <div v-if="info.totalLearnUser" class="course-detail-info-footer-people">
           <img :src="staticImg.learnLogo" alt="" />
           <span>{{ info.totalLearnUser }}人学过</span>
@@ -376,12 +374,10 @@ onMounted(async () => {
       </div>
     </div>
 
-    <!--打卡详情-->
     <div v-if="isPunch" class="punch" @click="showRules = true">
       <img :src="staticImg.punch" alt="" />
     </div>
 
-    <!--打卡规则-->
     <PunchRules :show="showRules" :rules="info.checkInExplain" @close="showRules = false" />
 
     <!--tab栏-->
@@ -396,7 +392,6 @@ onMounted(async () => {
           {{ filterTry(info.mediaType) }}
         </div>
         {{ item.title }}
-        <!--<div class="dots"></div>-->
         <img :src="staticImg.dotsLogo" alt="" />
       </div>
     </div>

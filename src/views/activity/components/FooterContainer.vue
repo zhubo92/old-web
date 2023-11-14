@@ -69,9 +69,7 @@ onMounted(() => {
 
 <template>
   <div class="footers">
-    <!--占位置用的-->
     <div class="footers-box" :style="{ height: `${boxHeight}px` }"></div>
-    <!--主要内容-->
     <div class="footers-container" :style="{ height: `${boxHeight}px` }">
       <slot></slot>
     </div>

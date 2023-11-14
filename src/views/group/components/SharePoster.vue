@@ -43,7 +43,7 @@ function share(id: number) {
 </script>
 
 <template>
-  <VanOverlay :show="show" z-index="20" @click="$emit('close')">
+  <VanOverlay :show="show" z-index="20" @click="emit('close')">
     <div class="share-poster-modal" @click.stop>
       <div class="share-poster-modal-title">分享至</div>
       <div class="share-poster-modal-list">
@@ -58,7 +58,7 @@ function share(id: number) {
         </div>
       </div>
 
-      <div class="share-poster-modal-cancel" @click="$emit('close')">取消</div>
+      <div class="share-poster-modal-cancel" @click="emit('close')">取消</div>
     </div>
   </VanOverlay>
 </template>

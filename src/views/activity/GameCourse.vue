@@ -56,7 +56,7 @@ const btnText = computed(() => {
 });
 
 function jump() {
-  router.push(`/growTogether/pay/ARGamePaySuccess?id=${id.value}&mode=${isFree.value ? 0 : 1}`);
+  router.push(`/activity/GamePaySuccess?id=${id.value}&mode=${isFree.value ? 0 : 1}`);
 }
 // 微信支付
 async function getCourseOrderWeChatPay() {

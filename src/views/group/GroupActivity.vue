@@ -15,7 +15,7 @@ import type { IGroupActivity } from "@/types/group";
 
 const bgi = "https://app-resources-luojigou.luojigou.vip/Fk6jPFoAXOcNcmGk1nBi_S6z6vet";
 const homeLogo = "https://app-resources-luojigou.luojigou.vip/Fg1ha-aI8Vq0J4YWsjVv5jaHKrSP";
-const shareLogo = "https://app-resources-luojigou.luojigou.vip/Fq05X89S4YCZ2FuFwiNczOalpQDD";
+
 const isApp = !isWeixinBrowser();
 
 const router = useRouter();
@@ -177,6 +177,7 @@ async function getGroupActivityByPage() {
 
 onMounted(async () => {
   await getToken();
+
   if (typeof id === "string") queryParams.id = id;
 
   await registerWxOpenLaunchApp(() => {
@@ -200,7 +201,6 @@ onUnmounted(() => {
 <template>
   <div class="one-yuan" :style="{ backgroundImage: `url(${bgi})` }">
     <img v-if="!isApp" :src="homeLogo" alt="" class="one-yuan-btn home" @click="goHome" />
-    <!--<img v-else :src="shareLogo" alt="" class="one-yuan-btn share" @click="sharePosterShow = true"/>-->
     <div class="one-yuan-content">
       <div
         class="commodity-item"
@@ -224,7 +224,6 @@ onUnmounted(() => {
             <span class="commodity-item-info-name-label">{{ item.population }}人团</span>
             {{ item.productName }}
           </div>
-          <!--          <div class="commodity-item-info-desc">{{ item.simpleDescription }}</div>-->
 
           <div class="commodity-item-info-footer">
             <div v-if="item.skuList && Array.isArray(item.skuList) && item.skuList.length !== 0">

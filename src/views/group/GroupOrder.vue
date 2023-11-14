@@ -271,7 +271,6 @@ function getPayResult() {
 
 // 页面跳转
 async function jumpPage(type: string, params = {}) {
-  // const {groupId, sku} = $route.query;
   console.log(type, params, "跳转参数");
   if (type === "paySuccess") {
     // 支付成功
@@ -298,7 +297,7 @@ async function jumpPage(type: string, params = {}) {
     router.go(-1);
   } else if (type === "goGroupBuyCoursePay") {
     // 支付或充值
-    if (payType.value === 3 && showNot) {
+    if (payType.value === 3 && showNot.value) {
       navAppPage("/shop/magic/user_account", null, "getCoins");
     } else {
       await goGroupBuyCoursePay();
@@ -381,29 +380,35 @@ async function handlePay(data: any) {
 // 拼团下单及支付
 async function goGroupBuyCoursePay() {
   if (payLoading.value) return;
-  payLoading.value = true;
-  const { productName, skuId, productType } = info;
-  const addressId = window.sessionStorage.getItem("addressId");
 
-  const params = {
-    addressId: productType === 1 ? "" : addressId,
-    activityId: activity,
-    count: productType === 1 ? 1 : count,
-    groupId,
-    platform: platform.value,
-    productName,
-    skuId,
-    payMethod: payType.value,
-    couponId: curCoupon.id,
-  };
+  try {
+    payLoading.value = true;
+    const { productName, skuId, productType } = info;
+    const addressId = window.sessionStorage.getItem("addressId");
 
-  let request = productType === 1 ? goGroupBuyCoursePayRequest : goGroupBuyProductPayRequest;
+    const params = {
+      addressId: productType === 1 ? "" : addressId,
+      activityId: activity,
+      count: productType === 1 ? 1 : count,
+      groupId,
+      platform: platform.value,
+      productName,
+      skuId,
+      payMethod: payType.value,
+      couponId: curCoupon.id,
+    };
 
-  const { data, status, msg } = await request(params);
-  if (status === 200) {
-    await handlePay(data);
-  } else {
-    showToast(msg);
+    let request = productType === 1 ? goGroupBuyCoursePayRequest : goGroupBuyProductPayRequest;
+
+    const { data, status, msg } = await request(params);
+    console.log(data, "data");
+    if (status === 200) {
+      await handlePay(data);
+    } else {
+      showToast(msg);
+    }
+  } catch (err) {
+    console.log(err, "goGroupBuyCoursePay");
   }
 
   payLoading.value = false;
@@ -432,6 +437,7 @@ async function getGroupBuySkuDetail(params: { activity: string; sku: string }) {
 
 // 获取用户剩余魔法币
 async function getMagicCoins() {
+  console.log("放假啊SDK");
   const { data, status } = await getMagicCoinsRequest();
   if (status === 200) {
     magicCoins.value = data || 0;
@@ -475,6 +481,10 @@ onMounted(async () => {
     await getGroupBuySkuDetail(params);
   }
 
+  console.log("adfjakl");
+
+  await getMagicCoins();
+
   judgePlatform();
   await getCoupon();
 });
@@ -501,7 +511,6 @@ onMounted(async () => {
       <div v-else>
         <div class="group-order-address-right">
           <div class="group-order-address-right-top">
-            <!--todo-->
             <div>{{ address.name }}</div>
             <div>{{ address.phone }}</div>
           </div>

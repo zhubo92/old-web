@@ -23,6 +23,10 @@ const dotsLogo = "https://app-resources-luojigou.luojigou.vip/FhXozxYfBJ8skg4tcM
 
 const isApp = !isWeixinBrowser();
 
+const emit = defineEmits<{
+  (e: "toggleTab", id: number): void;
+}>();
+
 const props = withDefaults(
   defineProps<{
     tabId: number;
@@ -55,7 +59,7 @@ const info = computed(() => props.info);
       v-for="item in tabList"
       :key="item.id"
       :class="['tab-item', tabId === item.id ? 'checked' : '']"
-      @click="$emit('toggleTab', item.id)"
+      @click="emit('toggleTab', item.id)"
     >
       <div v-if="item.id === 1" class="try-look">
         {{ info && info.mediaType === 1 ? "试听" : "试看" }}

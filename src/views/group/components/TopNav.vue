@@ -14,6 +14,10 @@ const isApp = !isWeixinBrowser();
 
 const { id } = useRoute().query;
 
+const emit = defineEmits<{
+  (e: "handleClick", type: string): void;
+}>();
+
 const props = defineProps<{
   title?: string;
   type?: number;
@@ -114,9 +118,9 @@ onMounted(async () => {
             v-if="courseInfo.isCollect === 1"
             :src="collectedBtn"
             alt=""
-            @click="$emit('handleClick', 'collect')"
+            @click="emit('handleClick', 'collect')"
           />
-          <img v-else :src="collectBtn" alt="" @click="$emit('handleClick', 'collect')" />
+          <img v-else :src="collectBtn" alt="" @click="emit('handleClick', 'collect')" />
           <img :src="shareBtn" alt="" @click="shareCourse" />
         </div>
       </div>

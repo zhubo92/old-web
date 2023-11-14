@@ -58,6 +58,7 @@ const router = createRouter({
     },
     {
       path: "/group/GroupActivity",
+      alias: "/growTogether/activity/oneYuan",
       name: "GroupActivity",
       component: () => import("@/views/group/GroupActivity.vue"),
       meta: {
@@ -98,6 +99,7 @@ const router = createRouter({
     },
     {
       path: "/invite/InviteHavePrize",
+      alias: "/invited",
       name: "InviteHavePrize",
       component: () => import("@/views/invite/InviteHavePrize.vue"),
       meta: {
@@ -130,6 +132,7 @@ const router = createRouter({
     },
     {
       path: "/course/CourseDetail",
+      alias: "/courseDetail",
       name: "CourseDetail",
       component: () => import("@/views/course/CourseDetail.vue"),
       meta: {
@@ -138,6 +141,7 @@ const router = createRouter({
     },
     {
       path: "/course/AudioDetail",
+      alias: "/audioCourse",
       name: "AudioDetail",
       component: () => import("@/views/course/AudioDetail.vue"),
       meta: {
@@ -153,7 +157,24 @@ const router = createRouter({
       },
     },
     {
+      path: "/course/PaySuccess",
+      name: "PaySuccess",
+      component: () => import("@/views/course/PaySuccess.vue"),
+      meta: {
+        title: "支付成功",
+      },
+    },
+    {
+      path: "/course/TryListen",
+      name: "TryListen",
+      component: () => import("@/views/course/TryListen.vue"),
+      meta: {
+        title: "音频课程试听",
+      },
+    },
+    {
       path: "/punch/PunchActivity",
+      alias: "/punch",
       name: "PunchActivity",
       component: () => import("@/views/punch/PunchActivity.vue"),
       meta: {
@@ -162,6 +183,7 @@ const router = createRouter({
     },
     {
       path: "/punch/PunchCourse/:id",
+      alias: "/punchCourse/:id",
       name: "PunchCourse",
       component: () => import("@/views/punch/PunchCourse.vue"),
       meta: {
@@ -170,6 +192,7 @@ const router = createRouter({
     },
     {
       path: "/punch/PunchDetail/:id",
+      alias: "/punchDetail/:id",
       name: "PunchDetail",
       component: () => import("@/views/punch/PunchDetail.vue"),
       meta: {
@@ -184,6 +207,14 @@ const router = createRouter({
         title: "逻辑狗0基础思维成长训练营",
       },
     },
+    {
+      path: "/activity/GamePaySuccess",
+      name: "GamePaySuccess",
+      component: () => import("@/views/activity/GamePaySuccess.vue"),
+      meta: {
+        title: "领取成功",
+      },
+    },
   ],
 });
 
@@ -191,10 +222,10 @@ router.beforeEach((to) => {
   // 网页标题
   document.title = (to.meta?.title || "") as string;
   // 404 页面
-  if (!router.getRoutes().find((route) => route.name === to.name)) {
-    console.log(to, "to");
-    return "/NotFound";
-  }
+  // if (!router.getRoutes().find((route) => route.name === to.name)) {
+  //   console.log(to, "to");
+  //   return "/NotFound";
+  // }
 
   // 返回 false 以取消导航
   return true;

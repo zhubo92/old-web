@@ -1,4 +1,4 @@
-import { TOKEN, USER_INFO } from "@/utils/constants";
+import { AUDIO, TOKEN, USER_INFO } from "@/utils/constants";
 import type { IUserInfo } from "@/types/user";
 export function getLToken() {
   return localStorage.getItem(TOKEN);
@@ -31,4 +31,20 @@ export function setUserInfo(userInfo: IUserInfo | any) {
 export function clearData() {
   localStorage.clear();
   sessionStorage.clear();
+}
+
+export function setAudio(params: { name: string; url: string; title: string; imgCover: string }) {
+  sessionStorage.setItem(AUDIO, JSON.stringify(params));
+}
+
+export function getAudio() {
+  const audio = sessionStorage.getItem(AUDIO);
+  if (audio) {
+    return JSON.parse(audio);
+  }
+  return null;
+}
+
+export function removeAudio() {
+  sessionStorage.removeItem(AUDIO);
 }

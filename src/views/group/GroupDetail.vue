@@ -102,7 +102,7 @@ async function jumpPage(type: string, data?: any) {
 
   const { origin, pathname } = window.location;
 
-  const defaultUrl = `${origin}${pathname}#/growTogether/group/detail?id=${detail.createGroupId}`;
+  const defaultUrl = `${origin}${pathname}#/group/GroupDetail?id=${detail.createGroupId}`;
 
   if (type === "lookDetail") {
     // 查看详情
@@ -397,7 +397,6 @@ onUnmounted(() => {
 
     <!--分享海报-->
     <InvitePoster :show="posterShow" :info="detail" @close="posterShow = false" />
-    <!--<share-poster :show="sharePosterShow"/>-->
 
     <!--分享到朋友圈提醒-->
     <div v-if="shareShow" class="shareLogo" @click="shareShow = false">

@@ -27,6 +27,7 @@ import GroupTeam from "@/views/group/components/GroupTeam.vue";
 import DirectoryPart from "@/views/group/components/DirectoryPart.vue";
 import LookCourse from "@/views/course/components/LookCourse.vue";
 import ConfirmOrderV2 from "@/views/course/components/ConfirmOrderV2.vue";
+import { setAudio } from "@/utils/storage";
 
 const staticImg = Object.freeze({
   buyLogo: "https://app-resources-luojigou.luojigou.vip/FtEsRA8TePMldqUAb9S9cID6L69Q",
@@ -136,16 +137,13 @@ function handleTry(record: any, item: any, type = "video") {
       backTop();
       Object.assign(playMedia, record);
     } else {
-      window.sessionStorage.setItem(
-        "audio",
-        JSON.stringify({
-          name: item.name,
-          title: courseInfo.name,
-          url: record.audioUrl,
-          imgCover: item.imgCover,
-        }),
-      );
-      router.push("/tryPlay");
+      setAudio({
+        name: item.name,
+        title: courseInfo.name,
+        url: record.audioUrl,
+        imgCover: item.imgCover,
+      });
+      router.push("/course/TryListen");
     }
   }
 }
@@ -334,10 +332,15 @@ function toggleTab(id: number) {
 
 onMounted(async () => {
   await getToken();
+
   if (typeof id === "string") await getMobileCourseDetail(id);
+
   await registerComponents();
+
   buried("jumpGroupCourseDetail", { ...courseInfo, ...route.query });
+
   swiperRef.value?.swipeTo(tabId.value);
+
   await nextTick();
   try {
     const tab = document.querySelector("#tab");
@@ -377,8 +380,6 @@ onMounted(async () => {
     />
 
     <div class="course-box">
-      <!--<div class="course-label">{{ info.mediaType | filterMediaType }}</div>-->
-
       <video
         v-if="playMedia.videoUrl"
         :src="playMedia.videoUrl"
@@ -459,12 +460,6 @@ onMounted(async () => {
           />
         </div>
       </VanSwipeItem>
-      <!--<van-swipe-item>-->
-      <!--  &lt;!&ndash;评论&ndash;&gt;-->
-      <!--  <template>-->
-      <!--    <comment ref="comment" :commentList="commentList"/>-->
-      <!--  </template>-->
-      <!--</van-swipe-item>-->
     </VanSwipe>
 
     <LookCourse v-if="!isApp && info.alreadyBuy === 1" :info="courseInfo" />

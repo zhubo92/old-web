@@ -164,11 +164,6 @@ onUnmounted(() => {});
         <!--逻辑狗课程-->
         <div v-if="isLuojigou">
           <div v-if="!item.isLock" class="chapter-item-btns">
-            <!--<div class="chapter-item-btn">-->
-            <!--  <img :src="item.isLock ? practice : noPractice" alt="" class="chapter-item-btn-img">-->
-            <!--  <span :class="['chapter-item-btn-text', !item.isLock && 'grey']">练一练</span>-->
-            <!--</div>-->
-            <!--跳转到小程序-->
             <JumpApplets
               :quesId="item.bankId"
               :semesterLeveCode="item.semesterLeveCode"
@@ -181,10 +176,7 @@ onUnmounted(() => {});
             </div>
           </div>
           <div v-else class="btn">
-            <!--<div class="btn-label">9.11 19:00 周二开课</div>-->
-            <!--<div class="btn-label">{{ item.unLockTime }}开课</div>-->
             <img :src="notUnlockedBtn2" alt="" />
-            <!--          <span>试看</span>-->
           </div>
         </div>
         <!--普通课程-->

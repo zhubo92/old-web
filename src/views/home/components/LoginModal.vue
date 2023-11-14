@@ -84,7 +84,7 @@ onUnmounted(() => {
 <template>
   <VanOverlay :show="show" @close="emit('close')">
     <div class="login-model" @click.stop>
-      <img :src="closeBtn" alt="" class="login-model-close" @click="$emit('close')" />
+      <img :src="closeBtn" alt="" class="login-model-close" @click="emit('close')" />
       <div class="login-model-title">输入并验证手机号，同步学习信息</div>
       <input
         v-model="phone"

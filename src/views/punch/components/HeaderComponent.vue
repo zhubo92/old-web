@@ -4,6 +4,10 @@ import { computed, onMounted, ref } from "vue";
 import type { IPunchCourse } from "@/types/punch";
 import { defaultPunchCourse } from "@/types/punch";
 
+const emit = defineEmits<{
+  (e: "jumpPage", val: string): void;
+}>();
+
 const props = withDefaults(
   defineProps<{
     info: IPunchCourse;
@@ -42,14 +46,10 @@ onMounted(() => {
 <template>
   <div class="hc" :style="{ background: `rgba(255,255,255, ${value})` }">
     <!--返回键-->
-    <VanIcon class="hc-back" size="22" name="arrow-left" @click="$emit('jumpPage', 'returnPrev')" />
+    <VanIcon class="hc-back" size="22" name="arrow-left" @click="emit('jumpPage', 'returnPrev')" />
 
     <!--右上角提醒-->
-    <div
-      v-if="showDailyRemind"
-      class="hc-remind fc"
-      @click="$emit('jumpPage', 'checkinUserNotify')"
-    >
+    <div v-if="showDailyRemind" class="hc-remind fc" @click="emit('jumpPage', 'checkinUserNotify')">
       <div class="hc-remind-text fc">每日提醒</div>
       <VanSwitch v-model="isDailyRemind" active-color="#FF7046" size="15px" />
     </div>

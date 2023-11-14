@@ -218,7 +218,6 @@ onMounted(async () => {
     <AudioTab v-if="tabFixTop" fixed :tabId="tabId" @toggleTab="toggleTab" />
 
     <div class="audio">
-      <!--课程详情-->
       <div class="audio-info">
         <div v-if="info.imgCover">
           <img :src="info.imgCover" alt="" class="audio-info-logo" />
@@ -231,11 +230,9 @@ onMounted(async () => {
           </div>
         </div>
       </div>
-      <!--音频logo-->
       <div class="audio-logo">
         <img :src="audioLogo" alt="" />
       </div>
-      <!--推荐相关书籍-->
       <div class="audio-recommend">
         <span class="dots"></span>
         <img :src="recommendText" alt="" class="audio-recommend-logo" />
@@ -253,11 +250,9 @@ onMounted(async () => {
       @change="changeSwiper"
     >
       <VanSwipeItem>
-        <!--详情-->
         <div v-html="info.description" class="description" ref="descriptionRef"></div>
       </VanSwipeItem>
       <VanSwipeItem>
-        <!--故事-->
         <div ref="directoryRef">
           <StoryDetail :info="info" :storyList="info.chapterList" :title="info.name" />
         </div>
@@ -275,7 +270,6 @@ onMounted(async () => {
 
     <LookCourse v-else-if="showLookBtn" :info="info" @notShow="showLookBtn = false" />
 
-    <!--占位置用的-->
     <div class="footers-box"></div>
 
     <ConfirmOrderV2

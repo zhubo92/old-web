@@ -174,7 +174,7 @@ onMounted(async () => {
     sectionIndex: number;
     validDurationArray: { lastTime: string }[];
   }) => {
-    console.log(val, "sectionLoad");
+    // console.log(val, "sectionLoad");
     try {
       info.chapterList[val.sectionIndex].itemList.forEach((item, index) => {
         if (item.getRecord) item.getRecord.lastTime = val.validDurationArray[index].lastTime;

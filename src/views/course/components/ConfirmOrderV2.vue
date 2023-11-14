@@ -106,12 +106,13 @@ async function getMagicCoinsPay() {
   if (status === 200) {
     showToast("下单成功");
 
-    await router.push("/growTogether/pay/success");
+    await router.push("/course/PaySuccess");
   } else {
     showToast("下单失败");
     emit("close");
   }
 }
+
 // 魔法币支付订单
 async function getMagicCoinsPayOrder() {
   const userInfo = getUserInfo();
@@ -129,6 +130,7 @@ async function getMagicCoinsPayOrder() {
     msg && showToast(msg);
   }
 }
+
 // 获取用户剩余魔法币
 async function getCoins() {
   const { data, status } = await getMagicCoinsRequest();
@@ -166,7 +168,7 @@ async function getCourseOrderWeChatPay() {
     const state = await wxPayFc(data);
 
     if (state) {
-      await router.push("/growTogether/pay/success");
+      await router.push("/course/PaySuccess");
     } else {
       emit("close");
     }
@@ -188,7 +190,7 @@ async function getCourseOrder() {
     if ((info.value as ICourseDetail).price !== 0) {
       await getCourseOrderWeChatPay();
     } else {
-      await router.push("/growTogether/pay/success");
+      await router.push("/course/PaySuccess");
     }
   } else {
     msg && showToast(msg);
@@ -256,6 +258,7 @@ async function getAliPaySign() {
     msg && showToast(msg);
   }
 }
+
 function paySuccess() {
   showLoadingToast({
     message: "加载中...",
@@ -267,7 +270,7 @@ function paySuccess() {
     emit("paySuccess");
   }, 1000);
 }
-// APP下单
+
 async function placeOrderAtApp() {
   const params = {
     orderType: 1,
@@ -289,13 +292,7 @@ async function placeOrderAtApp() {
     }
 
     if (system.value === "IOS") {
-      // if(myPayType === 0) {
-      //   await getWxPaySign()
-      // }else if(myPayType === 2) {
-      //   await getAliPaySign()
-      // }else {
       await payOrderByMagic();
-      // }
     } else {
       if (myPayType.value === 0) {
         await getWxPaySign();
@@ -309,6 +306,7 @@ async function placeOrderAtApp() {
     msg && showToast(msg);
   }
 }
+
 function goPay() {
   if (!isWeixinBrowser()) {
     if (isEnough.value) {

@@ -216,7 +216,7 @@ onUnmounted(() => {
       >
         去提现
       </div>
-      <div class="ci-progress-bottom fc" @click="$emit('jumpPage', 'lookPunchDetail')">
+      <div class="ci-progress-bottom fc" @click="emit('jumpPage', 'lookPunchDetail')">
         <img :src="staticImg.calendarIcon" alt="" />
         <div class="fc">查看打卡详情</div>
         <VanIcon class="ci-progress-bottom-back" size="10" name="arrow" color="#FF711A" />

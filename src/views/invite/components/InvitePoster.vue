@@ -9,6 +9,10 @@ interface IInfo {
   posterUrl?: string;
 }
 
+const emit = defineEmits<{
+  (e: "close"): void;
+}>();
+
 const props = withDefaults(
   defineProps<{
     show: boolean;
@@ -139,13 +143,9 @@ watch(show, (val) => {
 </script>
 
 <template>
-  <VanOverlay :show="show" @click="$emit('close')">
+  <VanOverlay :show="show" @click="emit('close')">
     <div class="modal" @click.stop>
-      <!--<div v-if="!myCanvasUrl" class="modal-cont">-->
-      <!--  <img src="https://app-resources-luojigou.luojigou.vip/FuTg8bcmip7h9BsoYobfKTrq4S_P"-->
-      <!--       class="modal-cont-img" alt="">-->
       <div class="qrCodeUrl" ref="qrCodeUrlRef"></div>
-      <!--</div>-->
 
       <canvas v-if="!myCanvasUrl" id="myCanvas" ref="myCanvasRef" class="invite-poster"></canvas>
 

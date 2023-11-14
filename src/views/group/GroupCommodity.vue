@@ -18,8 +18,6 @@ import ActivityInfoV2 from "@/views/group/components/ActivityInfoV2.vue";
 import GroupTeam from "@/views/group/components/GroupTeam.vue";
 import BuyModal from "@/views/group/components/BuyModal.vue";
 import ConfirmOrderV2 from "@/views/course/components/ConfirmOrderV2.vue";
-import { defaultCourseDetail } from "@/types/course";
-import type { ICourseDetail } from "@/types/course";
 import MomComment from "@/views/group/components/MomComment.vue";
 
 const okLogo = "https://app-resources-luojigou.luojigou.vip/FiSeuywTuh3CJYSSRsyIFAzX9m9s";
@@ -147,7 +145,7 @@ async function getMobileCommitBySpuId() {
     const { data, msg, status } = await getMobileCommitBySpuIdRequest(spuId, state, page);
     if (status === 200) {
       commitList.value = data.entityList || [];
-      console.log(commitList, "info");
+      console.log(commitList.value, "info");
     } else {
       msg && showToast(msg);
     }
@@ -211,14 +209,6 @@ onMounted(async () => {
         <div class="course-info-top-name">
           {{ info.goods.title }}
         </div>
-        <!--<div class="course-info-top-collect">-->
-        <!--  <img-->
-        <!--    :src="collectLogo"-->
-        <!--    alt=""-->
-        <!--    class="course-info-top-collect-logo"-->
-        <!--  />-->
-        <!--  <div class="course-info-top-collect-text">收藏</div>-->
-        <!--</div>-->
       </div>
       <div class="course-info-bottom">
         <div class="course-info-bottom-item">
@@ -233,7 +223,7 @@ onMounted(async () => {
     </div>
 
     <div class="course-remark">
-      <div class="course-remark-item">
+      <div class="course-remark-item" @click="buyShow = true">
         <div class="course-remark-item-left">
           <div class="course-remark-item-left-title">已选</div>
           <div class="course-remark-item-left-desc">{{ chosenSku }}</div>
@@ -287,15 +277,6 @@ onMounted(async () => {
           查看拼团详情
         </div>
         <div v-else-if="!isApp" class="course-buy">
-          <!--<div class="course-buy-alone" @click="jumpPage('buyAlone')">-->
-          <!--  <div class="course-buy-alone-price">-->
-          <!--    <span>￥</span>-->
-          <!--    {{ info.goods.price.toFixed(2) }}-->
-          <!--  </div>-->
-
-          <!--  <div class="course-buy-alone-text">单独购买</div>-->
-          <!--</div>-->
-
           <div
             v-if="info.groupBuyActivity"
             :class="['course-buy-look', activityState === '1' ? 'started' : '']"
@@ -340,35 +321,6 @@ onMounted(async () => {
         >立即购买
       </div>
     </div>
-
-    <!--<div class="course-buy">-->
-    <!--  <div class="course-buy-left">-->
-    <!--    <div class="course-buy-left-logo">-->
-    <!--      <img :src="customerServiceLogo" alt="">-->
-    <!--      <span>客服</span>-->
-    <!--    </div>-->
-    <!--    <div class="course-buy-left-logo">-->
-    <!--      <img :src="shoppingCartLogo" alt="">-->
-    <!--      <span>购物车</span>-->
-    <!--    </div>-->
-    <!--  </div>-->
-
-    <!--  <div class="course-buy-right">-->
-    <!--    <div class="course-buy-right-alone">-->
-    <!--      <div class="course-buy-right-alone-price">-->
-    <!--        <span>￥</span>99.90-->
-    <!--      </div>-->
-    <!--      <div class="course-buy-right-alone-text">单独购买</div>-->
-    <!--    </div>-->
-
-    <!--    <div class="course-buy-right-group">-->
-    <!--      <div class="course-buy-right-group-price">-->
-    <!--        <span>￥</span>88.00-->
-    <!--      </div>-->
-    <!--      <div class="course-buy-right-group-text">立即开团</div>-->
-    <!--    </div>-->
-    <!--  </div>-->
-    <!--</div>-->
 
     <div ref="buyModalRef">
       <BuyModal :show="buyShow" :info="info" @returnSku="returnSku" @close="buyShow = false" />
