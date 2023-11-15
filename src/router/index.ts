@@ -215,6 +215,14 @@ const router = createRouter({
         title: "领取成功",
       },
     },
+    {
+      path: "/temporary/ServiceAgreement",
+      name: "ServiceAgreement",
+      component: () => import("@/views/temporary/ServiceAgreement.vue"),
+      meta: {
+        title: "逻辑狗会员服务协议",
+      },
+    },
   ],
 });
 
