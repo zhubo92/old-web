@@ -224,6 +224,9 @@
 </template>
 
 <style scoped lang="scss">
+.sa {
+  overflow: hidden;
+}
 .content,
 .title,
 .desc {
@@ -240,5 +243,9 @@
 .title,
 .desc {
   font-weight: 600;
+}
+
+.desc {
+  margin-top: 27px;
 }
 </style>

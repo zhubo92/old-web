@@ -223,6 +223,14 @@ const router = createRouter({
         title: "逻辑狗会员服务协议",
       },
     },
+    {
+      path: "/temporary/TemporaryImage/:id",
+      name: "TemporaryImage",
+      component: () => import("@/views/temporary/TemporaryImage.vue"),
+      meta: {
+        title: "",
+      },
+    },
   ],
 });
 
